@@ -26,7 +26,7 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Information Technology",
         "Intended Audience :: Financial and Insurance Industry",
-        "Intended Audience :: Telecommunications Industry"
+        "Intended Audience :: Telecommunications Industry",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
