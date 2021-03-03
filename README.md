@@ -252,4 +252,4 @@ Check out **/demo** folder for more Python demos.
 
 ## SDK Reference
 
-Check out [ID Analyzer Python SDK Reference](
+Check out [ID Analyzer Python SDK Reference](https://idanalyzer.github.io/id-analyzer-python/)
