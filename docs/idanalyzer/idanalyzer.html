@@ -44,6 +44,9 @@
                                 <a class="variable" href="#CoreAPI.DEFAULT_CONFIG">DEFAULT_CONFIG</a>
                         </li>
                         <li>
+                                <a class="function" href="#CoreAPI.throw_api_exception">throw_api_exception</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#CoreAPI.reset_config">reset_config</a>
                         </li>
                         <li>
@@ -117,6 +120,9 @@
                         </li>
                         <li>
                                 <a class="variable" href="#DocuPass.DEFAULT_CONFIG">DEFAULT_CONFIG</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.throw_api_exception">throw_api_exception</a>
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.reset_config">reset_config</a>
@@ -221,6 +227,9 @@
                                 <a class="function" href="#Vault.__init__">Vault</a>
                         </li>
                         <li>
+                                <a class="function" href="#Vault.throw_api_exception">throw_api_exception</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#Vault.get">get</a>
                         </li>
                         <li>
@@ -286,6 +295,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="k">class</span> <span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
 
+<span class="n">client_library</span> <span class="o">=</span> <span class="s2">&quot;python-sdk-1.0.2&quot;</span>
 
 <span class="k">class</span> <span class="nc">CoreAPI</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -326,7 +336,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;vault_customdata4&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;vault_customdata5&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;barcodemode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span>
+        <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+        <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
@@ -336,12 +347,22 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -660,6 +681,10 @@ idanalyzer.idanalyzer    </h1>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -710,7 +735,9 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;logo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-        <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
+
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">company_name</span><span class="o">=</span><span class="s2">&quot;My Company Name&quot;</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
@@ -722,6 +749,7 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;companyname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">company_name</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
@@ -729,6 +757,14 @@ idanalyzer.idanalyzer    </h1>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1096,6 +1132,10 @@ idanalyzer.idanalyzer    </h1>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/create&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1114,7 +1154,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;apikey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span><span class="p">,</span>
             <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="n">reference</span><span class="p">,</span>
-            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span>
+            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span><span class="p">,</span>
+            <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
         <span class="p">}</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/validate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -1139,12 +1180,21 @@ idanalyzer.idanalyzer    </h1>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vault_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1352,10 +1402,14 @@ idanalyzer.idanalyzer    </h1>
             <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;apikey&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
-
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_library</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;vault/&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1490,7 +1544,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;vault_customdata4&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;vault_customdata5&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;barcodemode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span>
+        <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+        <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
@@ -1500,12 +1555,22 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1824,6 +1889,10 @@ idanalyzer.idanalyzer    </h1>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1856,6 +1925,7 @@ Core API is used to directly scan and validate global driver license, passport, 
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
@@ -1872,10 +1942,38 @@ Core API is used to directly scan and validate global driver license, passport, 
                             <div id="CoreAPI.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#CoreAPI.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;client&#39;: &#39;python-sdk-1.0.2&#39;}</span>
     </div>
 
     
+
+                            </div>
+                            <div id="CoreAPI.throw_api_exception" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.throw_api_exception">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">throw_api_exception</span><span class="signature">(self, throw_exception=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Whether an exception should be thrown if API response contains an error message</p>
+
+<p>:param throw_exception: Throw exception upon API error, defaults to false</p>
+</div>
+
 
                             </div>
                             <div id="CoreAPI.reset_config" class="classattr">
@@ -2635,6 +2733,10 @@ this can be useful for filtering and searching entries.</p>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2725,7 +2827,9 @@ optionally specify document back image, face verification image, face verificati
         <span class="s2">&quot;logo&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
-        <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
+
     <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">company_name</span><span class="o">=</span><span class="s2">&quot;My Company Name&quot;</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
@@ -2737,6 +2841,7 @@ optionally specify document back image, face verification image, face verificati
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;companyname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">company_name</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
@@ -2744,6 +2849,14 @@ optionally specify document back image, face verification image, face verificati
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3111,6 +3224,10 @@ optionally specify document back image, face verification image, face verificati
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/create&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -3129,7 +3246,8 @@ optionally specify document back image, face verification image, face verificati
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;apikey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span><span class="p">,</span>
             <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="n">reference</span><span class="p">,</span>
-            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span>
+            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span><span class="p">,</span>
+            <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
         <span class="p">}</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/validate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -3167,6 +3285,7 @@ DocuPass allows rapid identity verification using a webpage or mobile app</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;companyname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">company_name</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;EU&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
@@ -3184,10 +3303,38 @@ DocuPass allows rapid identity verification using a webpage or mobile app</p>
                             <div id="DocuPass.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#DocuPass.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;client&#39;: &#39;python-sdk-1.0.2&#39;}</span>
     </div>
 
     
+
+                            </div>
+                            <div id="DocuPass.throw_api_exception" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.throw_api_exception">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">throw_api_exception</span><span class="signature">(self, throw_exception=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Whether an exception should be thrown if API response contains an error message</p>
+
+<p>:param throw_exception: Throw exception upon API error, defaults to false</p>
+</div>
+
 
                             </div>
                             <div id="DocuPass.reset_config" class="classattr">
@@ -4221,7 +4368,8 @@ You can list, search and update document entries in your vault through Vault API
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;apikey&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span><span class="p">,</span>
             <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="n">reference</span><span class="p">,</span>
-            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span>
+            <span class="s2">&quot;hash&quot;</span><span class="p">:</span> <span class="nb">hash</span><span class="p">,</span>
+            <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
         <span class="p">}</span>
 
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/validate&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
@@ -4271,12 +4419,21 @@ You can list, search and update document entries in your vault through Vault API
         <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vault_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -4484,10 +4641,14 @@ You can list, search and update document entries in your vault through Vault API
             <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;apikey&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
-
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_library</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;vault/&quot;</span> <span class="o">+</span> <span class="n">action</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
         <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
@@ -4519,6 +4680,7 @@ Vault API allows cloud storage of user ID and information retrieved from Core AP
         <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/&quot;</span>
         <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
@@ -4530,6 +4692,34 @@ Vault API allows cloud storage of user ID and information retrieved from Core AP
         </details>
 
     
+
+                            </div>
+                            <div id="Vault.throw_api_exception" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#Vault.throw_api_exception">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">throw_api_exception</span><span class="signature">(self, throw_exception=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Whether an exception should be thrown if API response contains an error message</p>
+
+<p>:param throw_exception: Throw exception upon API error, defaults to false</p>
+</div>
+
 
                             </div>
                             <div id="Vault.get" class="classattr">

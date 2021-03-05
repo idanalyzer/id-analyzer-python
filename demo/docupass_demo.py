@@ -4,6 +4,9 @@ try:
     # initialize Core API with your api key and region (US/EU)
     docupass = idanalyzer.DocuPass("Your API Key", "Your Company Name Inc.", "US")
 
+    # Raise exceptions for API level errors
+    docupass.throw_api_exception(True)
+
     # We need to set an identifier so that we know internally who we are verifying,
     # this string will be returned in the callback. You can use your own user/customer id.
     docupass.set_custom_id("CUSTOMER1234")

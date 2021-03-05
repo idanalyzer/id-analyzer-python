@@ -4,6 +4,9 @@ try:
     # initialize Core API with your api key and region (US/EU)
     vault = idanalyzer.Vault("Your API Key", "US")
 
+    # Raise exceptions for API level errors
+    vault.throw_api_exception(True)
+
     # List 5 items created on or after 2021/02/25
     # sort result by first name in ascending order, starting from first item.
     response = vault.list(filter=["createtime>=2021/02/25"], orderby="firstName", sort="ASC", limit=5, offset=0)

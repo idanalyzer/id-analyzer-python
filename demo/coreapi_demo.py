@@ -4,6 +4,9 @@ try:
     # initialize Core API with your api key and region (US/EU)
     coreapi = idanalyzer.CoreAPI("Your API Key", "US")
 
+    # Raise exceptions for API level errors
+    coreapi.throw_api_exception(True)
+
     # enable document authentication using quick module
     coreapi.enable_authentication(True, 'quick')
 

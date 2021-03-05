@@ -17,6 +17,8 @@ class APIError(Exception):
     pass
 
 
+client_library = "python-sdk"
+
 class CoreAPI:
     """
     Initialize Core API with an API key and optional region (US, EU)
@@ -56,7 +58,8 @@ class CoreAPI:
         "vault_customdata4": "",
         "vault_customdata5": "",
         "barcodemode": False,
-        "biometric_threshold": 0.4
+        "biometric_threshold": 0.4,
+        "client": client_library
     }
 
     def __init__(self, apikey, region="US"):
@@ -66,12 +69,22 @@ class CoreAPI:
             raise ValueError("Please set an API region (US, EU)")
         self.config = self.DEFAULT_CONFIG
         self.apikey = apikey
+        self.throw_error = False
         if region.upper() == "EU":
             self.apiendpoint = "https://api-eu.idanalyzer.com/"
         elif region.upper() == "US":
             self.apiendpoint = "https://api.idanalyzer.com/"
         else:
             self.apiendpoint = region
+
+    def throw_api_exception(self, throw_exception = False):
+        """
+        Whether an exception should be thrown if API response contains an error message
+
+        :param throw_exception: Throw exception upon API error, defaults to false
+        """
+        self.throw_error = throw_exception is True
+
 
     def reset_config(self):
         """
@@ -390,6 +403,10 @@ class CoreAPI:
         r = requests.post(self.apiendpoint, data=payload)
         r.raise_for_status()
         result = r.json()
+
+        if not self.throw_error:
+            return result
+
         if result.get('error'):
             raise APIError(result['error'])
         else:
@@ -440,7 +457,9 @@ class DocuPass:
         "logo": "",
         "language": "",
         "biometric_threshold": 0.4,
-        "reusable": False
+        "reusable": False,
+        "client": client_library
+
     }
 
     def __init__(self, apikey, company_name="My Company Name", region="US"):
@@ -452,6 +471,7 @@ class DocuPass:
             raise ValueError("Please set an API region (US, EU)")
         self.config = self.DEFAULT_CONFIG
         self.apikey = apikey
+        self.throw_error = False
         self.config['companyname'] = company_name
         if region.upper() == "EU":
             self.apiendpoint = "https://api-eu.idanalyzer.com/"
@@ -459,6 +479,14 @@ class DocuPass:
             self.apiendpoint = "https://api.idanalyzer.com/"
         else:
             self.apiendpoint = region
+
+    def throw_api_exception(self, throw_exception = False):
+        """
+        Whether an exception should be thrown if API response contains an error message
+
+        :param throw_exception: Throw exception upon API error, defaults to false
+        """
+        self.throw_error = throw_exception is True
 
     def reset_config(self):
         """
@@ -826,6 +854,10 @@ class DocuPass:
         r = requests.post(self.apiendpoint + "docupass/create", data=payload)
         r.raise_for_status()
         result = r.json()
+
+        if not self.throw_error:
+            return result
+
         if result.get('error'):
             raise APIError(result['error'])
         else:
@@ -844,7 +876,8 @@ class DocuPass:
         payload = {
             "apikey": self.apikey,
             "reference": reference,
-            "hash": hash
+            "hash": hash,
+            "client": client_library
         }
 
         r = requests.post(self.apiendpoint + "docupass/validate", data=payload)
@@ -869,12 +902,21 @@ class Vault:
         if not region:
             raise ValueError("Please set an API region (US, EU)")
         self.apikey = apikey
+        self.throw_error = False
         if region.upper() == 'EU':
             self.apiendpoint = "https://api-eu.idanalyzer.com/"
         elif region.upper() == "US":
             self.apiendpoint = "https://api.idanalyzer.com/"
         else:
             self.apiendpoint = region
+
+    def throw_api_exception(self, throw_exception = False):
+        """
+        Whether an exception should be thrown if API response contains an error message
+
+        :param throw_exception: Throw exception upon API error, defaults to false
+        """
+        self.throw_error = throw_exception is True
 
     def get(self, vault_id):
         """
@@ -1082,10 +1124,14 @@ class Vault:
             payload = {}
 
         payload['apikey'] = self.apikey
-
+        payload['client'] = client_library
         r = requests.post(self.apiendpoint + "vault/" + action, data=payload)
         r.raise_for_status()
         result = r.json()
+
+        if not self.throw_error:
+            return result
+
         if result.get('error'):
             raise APIError(result['error'])
         else:
