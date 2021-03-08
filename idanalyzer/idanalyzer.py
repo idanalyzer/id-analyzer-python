@@ -106,7 +106,7 @@ class CoreAPI:
         and set authentication module
 
         :param enabled: Enable or disable Document Authentication, defaults to False
-        :param module: Module: 1, 2 or quick, defaults to 2
+        :param module: Authentication module version: 1, 2 or quick, defaults to 2
         :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument
         """
         self.config['authenticate'] = enabled is True
@@ -121,7 +121,7 @@ class CoreAPI:
         Scale down the uploaded image before sending to OCR engine. Adjust this value to fine tune recognition
         accuracy on large full-resolution images. Set 0 to disable image resizing.
 
-        :param max_scale: 0 or 500~4000, defaults to 1500
+        :param max_scale: 0 or 500~4000, defaults to 2000
         :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument
         """
         if max_scale != 0 and (max_scale < 500 or max_scale > 4000):
@@ -133,7 +133,7 @@ class CoreAPI:
         """
         Set the minimum confidence score to consider faces being identical
 
-        :param threshold: float between 0 to 1, defaults to 0.4
+        :param threshold: float between 0 to 1, higher value yields more strict verification, defaults to 0.4
         :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument
         """
         if threshold <= 0 or threshold > 1:
@@ -145,8 +145,8 @@ class CoreAPI:
         """
         Generate cropped image of document and/or face, and set output format [url, base64]
 
-        :param crop_document: Enable or disable crop document, defaults to False
-        :param crop_face: Enable or disable crop face, defaults to False
+        :param crop_document: Enable or disable document cropping, defaults to False
+        :param crop_face: Enable or disable face cropping, defaults to False
         :param output_format: url or base64, defaults to url
         :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument
         """
@@ -544,13 +544,13 @@ class DocuPass:
         DocuPass automatically detects user device language and display corresponding language.
         Set this parameter to override automatic language detection.
 
-        :param language: Language Code: en fr nl de es zh-TW zh-CN
+        :param language: Check DocuPass API reference for language code
         """
         self.config['language'] = language
 
     def set_callback_url(self, url="https://www.example.com/docupass_callback.php"):
         """
-        Set server-side callback URL to receive verification results
+        Set server-side callback/webhook URL to receive verification results
 
         :param url: Callback URL
         :raises ValueError: Invalid input argument
@@ -585,7 +585,7 @@ class DocuPass:
         Validate the document to check whether the document is authentic and has not been tampered
 
         :param enabled: Enable or disable document authentication, defaults to False
-        :param module: Module: 1, 2 or quick, defaults to 2
+        :param module: Authentication Module: "1", "2" or "quick", defaults to "2"
         :param minimum_score: Minimum score to pass verification, defaults to 0.3
         :raises ValueError: Invalid input argument
         """
@@ -762,8 +762,7 @@ class DocuPass:
 
     def restrict_country(self, country_codes):
         """
-        Check if the document was issued by specified countries,
-        if not error code 10 will be thrown. Separate multiple values with comma.
+        Only accept document issued by specified countries. Separate multiple values with comma.
         For example "US,CA" would accept documents from United States and Canada.
 
         :param country_codes: ISO ALPHA-2 Country Code separated by comma
@@ -775,8 +774,8 @@ class DocuPass:
 
     def restrict_state(self, states):
         """
-        Check if the document was issued by specified state, if not error code 11 will be thrown.
-        Separate multiple values with comma. For example "CA,TX" would accept documents from California and Texas.
+        Only accept document issued by specified state. Separate multiple values with comma.
+        For example "CA,TX" would accept documents from California and Texas.
 
         :param states: State full name or abbreviation separated by comma
         """
@@ -990,7 +989,7 @@ class Vault:
 
     def update(self, vault_id, data=None):
         """
-        List multiple vault entries with optional filter, sorting and paging arguments
+        Update vault entry with new data
 
         :param vault_id: Vault entry ID
         :param data: dictionary of the field key and its value
@@ -1028,9 +1027,9 @@ class Vault:
 
     def add_image(self, id, image, type=0):
         """
-        Delete a single or multiple vault entries
+        Add a document or face image into an existing vault entry
 
-        :param id: Vault entry ID or array of IDs
+        :param id: Vault entry ID
         :param image: Image file path or URL
         :param type: Type of image: 0 = document, 1 = person
         :return New image object
