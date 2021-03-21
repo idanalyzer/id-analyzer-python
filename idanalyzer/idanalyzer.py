@@ -326,6 +326,15 @@ class CoreAPI:
         self.config['vault_customdata4'] = data4
         self.config['vault_customdata5'] = data5
 
+    def set_parameter(self, parameter_key, parameter_value):
+        """
+        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions
+
+        :param parameter_key: Parameter key
+        :param parameter_value: Parameter value
+        """
+        self.config[parameter_key] = parameter_value
+
     def scan(self, **options):
         r"""
         Perform scan on ID document with Core API,
@@ -538,6 +547,14 @@ class DocuPass:
         :param: hide logo, defaults to False
         """
         self.config['nobranding'] = hidden is True
+
+    def set_custom_html_url(self, url):
+        """
+        Replace DocuPass page content with your own HTML and CSS, you can download the HTML/CSS template from DocuPass API Reference page
+
+        :param url: URL pointing to your own HTML page
+        """
+        self.config['customhtmlurl'] = url
 
     def set_language(self, language):
         """
@@ -803,6 +820,15 @@ class DocuPass:
         :param enabled Enable or disable Vault, defaults to True
         """
         self.config['vault_save'] = enabled is True
+
+    def set_parameter(self, parameter_key, parameter_value):
+        """
+        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions
+
+        :param parameter_key: Parameter key
+        :param parameter_value: Parameter value
+        """
+        self.config[parameter_key] = parameter_value
 
     def create_iframe(self):
         """

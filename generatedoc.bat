@@ -1,0 +1,1 @@
+pdoc -o ./docs ./idanalyzer/idanalyzer.py

@@ -107,6 +107,9 @@
                                 <a class="function" href="#CoreAPI.set_vault_data">set_vault_data</a>
                         </li>
                         <li>
+                                <a class="function" href="#CoreAPI.set_parameter">set_parameter</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#CoreAPI.scan">scan</a>
                         </li>
                 </ul>
@@ -141,6 +144,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.hide_branding_logo">hide_branding_logo</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.set_custom_html_url">set_custom_html_url</a>
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.set_language">set_language</a>
@@ -201,6 +207,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.enable_vault">enable_vault</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.set_parameter">set_parameter</a>
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.create_iframe">create_iframe</a>
@@ -295,7 +304,8 @@ idanalyzer.idanalyzer    </h1>
 <span class="k">class</span> <span class="nc">APIError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span>
 
-<span class="n">client_library</span> <span class="o">=</span> <span class="s2">&quot;python-sdk-1.0.2&quot;</span>
+
+<span class="n">client_library</span> <span class="o">=</span> <span class="s2">&quot;python-sdk&quot;</span>
 
 <span class="k">class</span> <span class="nc">CoreAPI</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -384,7 +394,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        and set authentication module</span>
 
 <span class="sd">        :param enabled: Enable or disable Document Authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication module version: 1, 2 or quick, defaults to 2</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authenticate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -399,7 +409,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        Scale down the uploaded image before sending to OCR engine. Adjust this value to fine tune recognition</span>
 <span class="sd">        accuracy on large full-resolution images. Set 0 to disable image resizing.</span>
 
-<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 1500</span>
+<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 2000</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_scale</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_scale</span> <span class="o">&lt;</span> <span class="mi">500</span> <span class="ow">or</span> <span class="n">max_scale</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">):</span>
@@ -411,7 +421,7 @@ idanalyzer.idanalyzer    </h1>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the minimum confidence score to consider faces being identical</span>
 
-<span class="sd">        :param threshold: float between 0 to 1, defaults to 0.4</span>
+<span class="sd">        :param threshold: float between 0 to 1, higher value yields more strict verification, defaults to 0.4</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -423,8 +433,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate cropped image of document and/or face, and set output format [url, base64]</span>
 
-<span class="sd">        :param crop_document: Enable or disable crop document, defaults to False</span>
-<span class="sd">        :param crop_face: Enable or disable crop face, defaults to False</span>
+<span class="sd">        :param crop_document: Enable or disable document cropping, defaults to False</span>
+<span class="sd">        :param crop_face: Enable or disable face cropping, defaults to False</span>
 <span class="sd">        :param output_format: url or base64, defaults to url</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -603,6 +613,15 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data5</span>
+
+    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
 
     <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -817,18 +836,26 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;nobranding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hidden</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">set_custom_html_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replace DocuPass page content with your own HTML and CSS, you can download the HTML/CSS template from DocuPass API Reference page</span>
+
+<span class="sd">        :param url: URL pointing to your own HTML page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;customhtmlurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+
     <span class="k">def</span> <span class="nf">set_language</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        DocuPass automatically detects user device language and display corresponding language.</span>
 <span class="sd">        Set this parameter to override automatic language detection.</span>
 
-<span class="sd">        :param language: Language Code: en fr nl de es zh-TW zh-CN</span>
+<span class="sd">        :param language: Check DocuPass API reference for language code</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language</span>
 
     <span class="k">def</span> <span class="nf">set_callback_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://www.example.com/docupass_callback.php&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set server-side callback URL to receive verification results</span>
+<span class="sd">        Set server-side callback/webhook URL to receive verification results</span>
 
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
@@ -863,7 +890,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        Validate the document to check whether the document is authentic and has not been tampered</span>
 
 <span class="sd">        :param enabled: Enable or disable document authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication Module: &quot;1&quot;, &quot;2&quot; or &quot;quick&quot;, defaults to &quot;2&quot;</span>
 <span class="sd">        :param minimum_score: Minimum score to pass verification, defaults to 0.3</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1040,8 +1067,7 @@ idanalyzer.idanalyzer    </h1>
 
     <span class="k">def</span> <span class="nf">restrict_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_codes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified countries,</span>
-<span class="sd">        if not error code 10 will be thrown. Separate multiple values with comma.</span>
+<span class="sd">        Only accept document issued by specified countries. Separate multiple values with comma.</span>
 <span class="sd">        For example &quot;US,CA&quot; would accept documents from United States and Canada.</span>
 
 <span class="sd">        :param country_codes: ISO ALPHA-2 Country Code separated by comma</span>
@@ -1053,8 +1079,8 @@ idanalyzer.idanalyzer    </h1>
 
     <span class="k">def</span> <span class="nf">restrict_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified state, if not error code 11 will be thrown.</span>
-<span class="sd">        Separate multiple values with comma. For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
+<span class="sd">        Only accept document issued by specified state. Separate multiple values with comma.</span>
+<span class="sd">        For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
 
 <span class="sd">        :param states: State full name or abbreviation separated by comma</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1083,6 +1109,15 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_save&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
+        
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -1268,7 +1303,7 @@ idanalyzer.idanalyzer    </h1>
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vault_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List multiple vault entries with optional filter, sorting and paging arguments</span>
+<span class="sd">        Update vault entry with new data</span>
 
 <span class="sd">        :param vault_id: Vault entry ID</span>
 <span class="sd">        :param data: dictionary of the field key and its value</span>
@@ -1306,9 +1341,9 @@ idanalyzer.idanalyzer    </h1>
 
     <span class="k">def</span> <span class="nf">add_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete a single or multiple vault entries</span>
+<span class="sd">        Add a document or face image into an existing vault entry</span>
 
-<span class="sd">        :param id: Vault entry ID or array of IDs</span>
+<span class="sd">        :param id: Vault entry ID</span>
 <span class="sd">        :param image: Image file path or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
@@ -1592,7 +1627,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        and set authentication module</span>
 
 <span class="sd">        :param enabled: Enable or disable Document Authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication module version: 1, 2 or quick, defaults to 2</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authenticate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -1607,7 +1642,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        Scale down the uploaded image before sending to OCR engine. Adjust this value to fine tune recognition</span>
 <span class="sd">        accuracy on large full-resolution images. Set 0 to disable image resizing.</span>
 
-<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 1500</span>
+<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 2000</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_scale</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_scale</span> <span class="o">&lt;</span> <span class="mi">500</span> <span class="ow">or</span> <span class="n">max_scale</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">):</span>
@@ -1619,7 +1654,7 @@ idanalyzer.idanalyzer    </h1>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the minimum confidence score to consider faces being identical</span>
 
-<span class="sd">        :param threshold: float between 0 to 1, defaults to 0.4</span>
+<span class="sd">        :param threshold: float between 0 to 1, higher value yields more strict verification, defaults to 0.4</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -1631,8 +1666,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate cropped image of document and/or face, and set output format [url, base64]</span>
 
-<span class="sd">        :param crop_document: Enable or disable crop document, defaults to False</span>
-<span class="sd">        :param crop_face: Enable or disable crop face, defaults to False</span>
+<span class="sd">        :param crop_document: Enable or disable document cropping, defaults to False</span>
+<span class="sd">        :param crop_face: Enable or disable face cropping, defaults to False</span>
 <span class="sd">        :param output_format: url or base64, defaults to url</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1812,6 +1847,15 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data5</span>
 
+    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
+
     <span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
         <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform scan on ID document with Core API,</span>
@@ -1942,7 +1986,7 @@ Core API is used to directly scan and validate global driver license, passport, 
                             <div id="CoreAPI.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#CoreAPI.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;client&#39;: &#39;python-sdk-1.0.2&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -2044,7 +2088,7 @@ Core API is used to directly scan and validate global driver license, passport, 
 <span class="sd">        and set authentication module</span>
 
 <span class="sd">        :param enabled: Enable or disable Document Authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication module version: 1, 2 or quick, defaults to 2</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;authenticate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
@@ -2061,7 +2105,7 @@ Core API is used to directly scan and validate global driver license, passport, 
 and set authentication module</p>
 
 <p>:param enabled: Enable or disable Document Authentication, defaults to False
-:param module: Module: 1, 2 or quick, defaults to 2
+:param module: Authentication module version: 1, 2 or quick, defaults to 2
 :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</p>
 </div>
 
@@ -2082,7 +2126,7 @@ and set authentication module</p>
 <span class="sd">        Scale down the uploaded image before sending to OCR engine. Adjust this value to fine tune recognition</span>
 <span class="sd">        accuracy on large full-resolution images. Set 0 to disable image resizing.</span>
 
-<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 1500</span>
+<span class="sd">        :param max_scale: 0 or 500~4000, defaults to 2000</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_scale</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="p">(</span><span class="n">max_scale</span> <span class="o">&lt;</span> <span class="mi">500</span> <span class="ow">or</span> <span class="n">max_scale</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">):</span>
@@ -2096,7 +2140,7 @@ and set authentication module</p>
             <div class="docstring"><p>Scale down the uploaded image before sending to OCR engine. Adjust this value to fine tune recognition
 accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
 
-<p>:param max_scale: 0 or 500~4000, defaults to 1500
+<p>:param max_scale: 0 or 500~4000, defaults to 2000
 :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</p>
 </div>
 
@@ -2116,7 +2160,7 @@ accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the minimum confidence score to consider faces being identical</span>
 
-<span class="sd">        :param threshold: float between 0 to 1, defaults to 0.4</span>
+<span class="sd">        :param threshold: float between 0 to 1, higher value yields more strict verification, defaults to 0.4</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">threshold</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">threshold</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -2129,7 +2173,7 @@ accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
 
             <div class="docstring"><p>Set the minimum confidence score to consider faces being identical</p>
 
-<p>:param threshold: float between 0 to 1, defaults to 0.4
+<p>:param threshold: float between 0 to 1, higher value yields more strict verification, defaults to 0.4
 :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</p>
 </div>
 
@@ -2149,8 +2193,8 @@ accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate cropped image of document and/or face, and set output format [url, base64]</span>
 
-<span class="sd">        :param crop_document: Enable or disable crop document, defaults to False</span>
-<span class="sd">        :param crop_face: Enable or disable crop face, defaults to False</span>
+<span class="sd">        :param crop_document: Enable or disable document cropping, defaults to False</span>
+<span class="sd">        :param crop_face: Enable or disable face cropping, defaults to False</span>
 <span class="sd">        :param output_format: url or base64, defaults to url</span>
 <span class="sd">        :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2166,8 +2210,8 @@ accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
 
             <div class="docstring"><p>Generate cropped image of document and/or face, and set output format [url, base64]</p>
 
-<p>:param crop_document: Enable or disable crop document, defaults to False
-:param crop_face: Enable or disable crop face, defaults to False
+<p>:param crop_document: Enable or disable document cropping, defaults to False
+:param crop_face: Enable or disable face cropping, defaults to False
 :param output_format: url or base64, defaults to url
 :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</p>
 </div>
@@ -2646,6 +2690,36 @@ this can be useful for filtering and searching entries.</p>
 
 
                             </div>
+                            <div id="CoreAPI.set_parameter" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.set_parameter">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_parameter</span><span class="signature">(self, parameter_key, parameter_value)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</p>
+
+<p>:param parameter_key: Parameter key
+:param parameter_value: Parameter value</p>
+</div>
+
+
+                            </div>
                             <div id="CoreAPI.scan" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#CoreAPI.scan">#&nbsp;&nbsp</a>
 
@@ -2909,18 +2983,26 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;nobranding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hidden</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">set_custom_html_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replace DocuPass page content with your own HTML and CSS, you can download the HTML/CSS template from DocuPass API Reference page</span>
+
+<span class="sd">        :param url: URL pointing to your own HTML page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;customhtmlurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+
     <span class="k">def</span> <span class="nf">set_language</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        DocuPass automatically detects user device language and display corresponding language.</span>
 <span class="sd">        Set this parameter to override automatic language detection.</span>
 
-<span class="sd">        :param language: Language Code: en fr nl de es zh-TW zh-CN</span>
+<span class="sd">        :param language: Check DocuPass API reference for language code</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language</span>
 
     <span class="k">def</span> <span class="nf">set_callback_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://www.example.com/docupass_callback.php&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set server-side callback URL to receive verification results</span>
+<span class="sd">        Set server-side callback/webhook URL to receive verification results</span>
 
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
@@ -2955,7 +3037,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        Validate the document to check whether the document is authentic and has not been tampered</span>
 
 <span class="sd">        :param enabled: Enable or disable document authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication Module: &quot;1&quot;, &quot;2&quot; or &quot;quick&quot;, defaults to &quot;2&quot;</span>
 <span class="sd">        :param minimum_score: Minimum score to pass verification, defaults to 0.3</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3132,8 +3214,7 @@ optionally specify document back image, face verification image, face verificati
 
     <span class="k">def</span> <span class="nf">restrict_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_codes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified countries,</span>
-<span class="sd">        if not error code 10 will be thrown. Separate multiple values with comma.</span>
+<span class="sd">        Only accept document issued by specified countries. Separate multiple values with comma.</span>
 <span class="sd">        For example &quot;US,CA&quot; would accept documents from United States and Canada.</span>
 
 <span class="sd">        :param country_codes: ISO ALPHA-2 Country Code separated by comma</span>
@@ -3145,8 +3226,8 @@ optionally specify document back image, face verification image, face verificati
 
     <span class="k">def</span> <span class="nf">restrict_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified state, if not error code 11 will be thrown.</span>
-<span class="sd">        Separate multiple values with comma. For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
+<span class="sd">        Only accept document issued by specified state. Separate multiple values with comma.</span>
+<span class="sd">        For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
 
 <span class="sd">        :param states: State full name or abbreviation separated by comma</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3175,6 +3256,15 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_save&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
+        
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -3303,7 +3393,7 @@ DocuPass allows rapid identity verification using a webpage or mobile app</p>
                             <div id="DocuPass.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#DocuPass.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;client&#39;: &#39;python-sdk-1.0.2&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -3508,6 +3598,34 @@ It is useful for identifying your user within your database. This value will be 
 
 
                             </div>
+                            <div id="DocuPass.set_custom_html_url" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.set_custom_html_url">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_custom_html_url</span><span class="signature">(self, url)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_custom_html_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Replace DocuPass page content with your own HTML and CSS, you can download the HTML/CSS template from DocuPass API Reference page</span>
+
+<span class="sd">        :param url: URL pointing to your own HTML page</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;customhtmlurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Replace DocuPass page content with your own HTML and CSS, you can download the HTML/CSS template from DocuPass API Reference page</p>
+
+<p>:param url: URL pointing to your own HTML page</p>
+</div>
+
+
+                            </div>
                             <div id="DocuPass.set_language" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#DocuPass.set_language">#&nbsp;&nbsp</a>
 
@@ -3523,7 +3641,7 @@ It is useful for identifying your user within your database. This value will be 
 <span class="sd">        DocuPass automatically detects user device language and display corresponding language.</span>
 <span class="sd">        Set this parameter to override automatic language detection.</span>
 
-<span class="sd">        :param language: Language Code: en fr nl de es zh-TW zh-CN</span>
+<span class="sd">        :param language: Check DocuPass API reference for language code</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">language</span>
 </pre></div>
@@ -3533,7 +3651,7 @@ It is useful for identifying your user within your database. This value will be 
             <div class="docstring"><p>DocuPass automatically detects user device language and display corresponding language.
 Set this parameter to override automatic language detection.</p>
 
-<p>:param language: Language Code: en fr nl de es zh-TW zh-CN</p>
+<p>:param language: Check DocuPass API reference for language code</p>
 </div>
 
 
@@ -3550,7 +3668,7 @@ Set this parameter to override automatic language detection.</p>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_callback_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://www.example.com/docupass_callback.php&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set server-side callback URL to receive verification results</span>
+<span class="sd">        Set server-side callback/webhook URL to receive verification results</span>
 
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
@@ -3563,7 +3681,7 @@ Set this parameter to override automatic language detection.</p>
 
         </details>
 
-            <div class="docstring"><p>Set server-side callback URL to receive verification results</p>
+            <div class="docstring"><p>Set server-side callback/webhook URL to receive verification results</p>
 
 <p>:param url: Callback URL
 :raises ValueError: Invalid input argument</p>
@@ -3634,7 +3752,7 @@ e.g. https://www.example.com/success.php?reference=XXXXXXXX&amp;customid=XXXXXXX
 <span class="sd">        Validate the document to check whether the document is authentic and has not been tampered</span>
 
 <span class="sd">        :param enabled: Enable or disable document authentication, defaults to False</span>
-<span class="sd">        :param module: Module: 1, 2 or quick, defaults to 2</span>
+<span class="sd">        :param module: Authentication Module: &quot;1&quot;, &quot;2&quot; or &quot;quick&quot;, defaults to &quot;2&quot;</span>
 <span class="sd">        :param minimum_score: Minimum score to pass verification, defaults to 0.3</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -3656,7 +3774,7 @@ e.g. https://www.example.com/success.php?reference=XXXXXXXX&amp;customid=XXXXXXX
             <div class="docstring"><p>Validate the document to check whether the document is authentic and has not been tampered</p>
 
 <p>:param enabled: Enable or disable document authentication, defaults to False
-:param module: Module: 1, 2 or quick, defaults to 2
+:param module: Authentication Module: "1", "2" or "quick", defaults to "2"
 :param minimum_score: Minimum score to pass verification, defaults to 0.3
 :raises ValueError: Invalid input argument</p>
 </div>
@@ -4100,8 +4218,7 @@ when performing dual-side scan. If any information mismatches error 14 will be t
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">restrict_country</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">country_codes</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified countries,</span>
-<span class="sd">        if not error code 10 will be thrown. Separate multiple values with comma.</span>
+<span class="sd">        Only accept document issued by specified countries. Separate multiple values with comma.</span>
 <span class="sd">        For example &quot;US,CA&quot; would accept documents from United States and Canada.</span>
 
 <span class="sd">        :param country_codes: ISO ALPHA-2 Country Code separated by comma</span>
@@ -4114,8 +4231,7 @@ when performing dual-side scan. If any information mismatches error 14 will be t
 
         </details>
 
-            <div class="docstring"><p>Check if the document was issued by specified countries,
-if not error code 10 will be thrown. Separate multiple values with comma.
+            <div class="docstring"><p>Only accept document issued by specified countries. Separate multiple values with comma.
 For example "US,CA" would accept documents from United States and Canada.</p>
 
 <p>:param country_codes: ISO ALPHA-2 Country Code separated by comma</p>
@@ -4135,8 +4251,8 @@ For example "US,CA" would accept documents from United States and Canada.</p>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">restrict_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the document was issued by specified state, if not error code 11 will be thrown.</span>
-<span class="sd">        Separate multiple values with comma. For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
+<span class="sd">        Only accept document issued by specified state. Separate multiple values with comma.</span>
+<span class="sd">        For example &quot;CA,TX&quot; would accept documents from California and Texas.</span>
 
 <span class="sd">        :param states: State full name or abbreviation separated by comma</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4148,8 +4264,8 @@ For example "US,CA" would accept documents from United States and Canada.</p>
 
         </details>
 
-            <div class="docstring"><p>Check if the document was issued by specified state, if not error code 11 will be thrown.
-Separate multiple values with comma. For example "CA,TX" would accept documents from California and Texas.</p>
+            <div class="docstring"><p>Only accept document issued by specified state. Separate multiple values with comma.
+For example "CA,TX" would accept documents from California and Texas.</p>
 
 <p>:param states: State full name or abbreviation separated by comma</p>
 </div>
@@ -4213,6 +4329,36 @@ Separate multiple values with comma. For example "CA,TX" would accept documents 
 You can list, search and update document entries in your vault through Vault API or web portal.</p>
 
 <p>:param enabled Enable or disable Vault, defaults to True</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.set_parameter" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.set_parameter">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_parameter</span><span class="signature">(self, parameter_key, parameter_value)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
+
+<span class="sd">        :param parameter_key: Parameter key</span>
+<span class="sd">        :param parameter_value: Parameter value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</p>
+
+<p>:param parameter_key: Parameter key
+:param parameter_value: Parameter value</p>
 </div>
 
 
@@ -4507,7 +4653,7 @@ You can list, search and update document entries in your vault through Vault API
 
     <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vault_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List multiple vault entries with optional filter, sorting and paging arguments</span>
+<span class="sd">        Update vault entry with new data</span>
 
 <span class="sd">        :param vault_id: Vault entry ID</span>
 <span class="sd">        :param data: dictionary of the field key and its value</span>
@@ -4545,9 +4691,9 @@ You can list, search and update document entries in your vault through Vault API
 
     <span class="k">def</span> <span class="nf">add_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete a single or multiple vault entries</span>
+<span class="sd">        Add a document or face image into an existing vault entry</span>
 
-<span class="sd">        :param id: Vault entry ID or array of IDs</span>
+<span class="sd">        :param id: Vault entry ID</span>
 <span class="sd">        :param image: Image file path or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
@@ -4867,7 +5013,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vault_id</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        List multiple vault entries with optional filter, sorting and paging arguments</span>
+<span class="sd">        Update vault entry with new data</span>
 
 <span class="sd">        :param vault_id: Vault entry ID</span>
 <span class="sd">        :param data: dictionary of the field key and its value</span>
@@ -4891,7 +5037,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
 
         </details>
 
-            <div class="docstring"><p>List multiple vault entries with optional filter, sorting and paging arguments</p>
+            <div class="docstring"><p>Update vault entry with new data</p>
 
 <p>:param vault_id: Vault entry ID
 :param data: dictionary of the field key and its value
@@ -4954,9 +5100,9 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">add_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Delete a single or multiple vault entries</span>
+<span class="sd">        Add a document or face image into an existing vault entry</span>
 
-<span class="sd">        :param id: Vault entry ID or array of IDs</span>
+<span class="sd">        :param id: Vault entry ID</span>
 <span class="sd">        :param image: Image file path or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
@@ -4984,9 +5130,9 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
 
         </details>
 
-            <div class="docstring"><p>Delete a single or multiple vault entries</p>
+            <div class="docstring"><p>Add a document or face image into an existing vault entry</p>
 
-<p>:param id: Vault entry ID or array of IDs
+<p>:param id: Vault entry ID
 :param image: Image file path or URL
 :param type: Type of image: 0 = document, 1 = person
 :return New image object
