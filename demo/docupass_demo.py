@@ -1,7 +1,7 @@
 import idanalyzer
 
 try:
-    # initialize Core API with your api key and region (US/EU)
+    # Initialize DocuPass API with your api key and region (US/EU)
     docupass = idanalyzer.DocuPass("Your API Key", "Your Company Name Inc.", "US")
 
     # Raise exceptions for API level errors
@@ -51,7 +51,15 @@ try:
     docupass.verify_name("Elon Musk") # check if the person is named Elon Musk
     docupass.verify_address("123 Sunny Rd, California") # Check if address on ID matches with provided address
     docupass.verify_postcode("90001") # check if postcode on ID matches with provided postcode
+    docupass.set_custom_html_url("https://www.yourwebsite.com/docupass_template.html") # use your own HTML/CSS for DocuPass page
+    docupass.sms_verification_link("+1333444555")  # Send verification link to user's mobile phone
+    docupass.enable_phone_verification(True)  # get user to input their own phone number for verification
+    docupass.verify_phone("+1333444555")  # verify user's phone number you already have in your database
+    docupass.enable_aml_check(True)  # enable AML/PEP compliance check
+    docupass.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
+    docupass.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
     """
+
 
     # Create a mobile verification session for this user
     response = docupass.create_mobile()

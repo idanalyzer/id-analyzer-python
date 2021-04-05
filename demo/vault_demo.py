@@ -1,7 +1,7 @@
 import idanalyzer
 
 try:
-    # initialize Core API with your api key and region (US/EU)
+    # Initialize Vault API with your api key and region (US/EU)
     vault = idanalyzer.Vault("Your API Key", "US")
 
     # Raise exceptions for API level errors

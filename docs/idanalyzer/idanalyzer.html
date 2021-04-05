@@ -65,6 +65,15 @@
                                 <a class="function" href="#CoreAPI.enable_image_output">enable_image_output</a>
                         </li>
                         <li>
+                                <a class="function" href="#CoreAPI.enable_aml_check">enable_aml_check</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#CoreAPI.set_aml_database">set_aml_database</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#CoreAPI.enable_aml_strict_match">enable_aml_strict_match</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#CoreAPI.enable_dualside_check">enable_dualside_check</a>
                         </li>
                         <li>
@@ -176,6 +185,24 @@
                                 <a class="function" href="#DocuPass.enable_dualside_check">enable_dualside_check</a>
                         </li>
                         <li>
+                                <a class="function" href="#DocuPass.enable_aml_check">enable_aml_check</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.set_aml_database">set_aml_database</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.enable_aml_strict_match">enable_aml_strict_match</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.enable_phone_verification">enable_phone_verification</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.sms_verification_link">sms_verification_link</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.verify_phone">verify_phone</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#DocuPass.verify_expiry">verify_expiry</a>
                         </li>
                         <li>
@@ -268,6 +295,30 @@
                 </ul>
 
             </li>
+            <li>
+                    <a class="class" href="#AMLAPI">AMLAPI</a>
+                            <ul class="memberlist">
+                        <li>
+                                <a class="function" href="#AMLAPI.__init__">AMLAPI</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#AMLAPI.throw_api_exception">throw_api_exception</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#AMLAPI.set_aml_database">set_aml_database</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#AMLAPI.set_entity_type">set_entity_type</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#AMLAPI.search_by_name">search_by_name</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#AMLAPI.search_by_id_number">search_by_id_number</a>
+                        </li>
+                </ul>
+
+            </li>
     </ul>
 
 
@@ -347,6 +398,9 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;vault_customdata5&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;barcodemode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+        <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
@@ -372,7 +426,6 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
-
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -444,6 +497,32 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputimage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crop_document</span> <span class="ow">is</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputface&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crop_face</span> <span class="ow">is</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputmode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_format</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">enable_dualside_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -755,6 +834,13 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
         <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phoneverification&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;verify_phone&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sms_verification_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;customhtmlurl&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
 
     <span class="p">}</span>
@@ -981,6 +1067,60 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dualsidecheck&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">enable_phone_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether to ask user to enter a phone number for verification, DocuPass supports both mobile or landline number verification.</span>
+<span class="sd">        Verified phone number will be returned in callback JSON.</span>
+
+<span class="sd">        :param enabled: Enable or disable user phone verification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;phoneverification&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span>
+
+    <span class="k">def</span> <span class="nf">sms_verification_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_verification_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+
+    <span class="k">def</span> <span class="nf">verify_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will attempt to verify this phone number as part of the identity verification process,</span>
+<span class="sd">        both mobile or landline are supported, users will not be able to enter their own numbers or change the provided number.</span>
+
+<span class="sd">        :param phone_number: Mobile or landline number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;verify_phone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phone_number</span>
+
     <span class="k">def</span> <span class="nf">verify_expiry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the document is still valid based on its expiry date.</span>
@@ -1117,7 +1257,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param parameter_value: Parameter value</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
-        
+
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -1449,6 +1589,115 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">class</span> <span class="nc">AMLAPI</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize AML API with an API key, and optional region (US, EU)</span>
+<span class="sd">    AML API allows you to monitor politically exposed persons (PEPs), and discover person or organization on under sanctions from worldwide governments.</span>
+<span class="sd">    ID Analyzer AML solutions allows you to check for comprehensive customer due diligence and Anti Money Laundering (AML) and Know Your Customer (KYC) program.</span>
+
+<span class="sd">    :param apikey: You API key</span>
+<span class="sd">    :param region: API Region US/EU, defaults to US</span>
+<span class="sd">    :raises ValueError: Invalid input argument</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">apikey</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please provide an API key&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/aml&quot;</span>
+        <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/aml&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML search, if left blank, all source databases will be checked. </span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+<span class="sd">        </span>
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">set_entity_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return only entities with specified entity type, leave blank to return both person and legal entity.</span>
+<span class="sd">        </span>
+<span class="sd">        :param entity_type: &#39;person&#39; or &#39;legalentity&#39;</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;person&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;legalentity&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Entity Type should be either empty, &#39;person&#39; or &#39;legalentity&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="n">entity_type</span>
+
+    <span class="k">def</span> <span class="nf">search_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a person or company&#39;s name or alias</span>
+
+<span class="sd">        :param name: Name or alias to search AML Database</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name should contain at least 3 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">search_by_id_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_number</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a document number (Passport, ID Card or any identification documents)</span>
+
+<span class="sd">        :param document_number: Document ID Number to perform search</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_number</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Document number should contain at least 5 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;documentnumber&quot;</span><span class="p">:</span> <span class="n">document_number</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">__api</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;entity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;apikey&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_library</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 
         </details>
@@ -1580,6 +1829,9 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;vault_customdata5&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;barcodemode&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+        <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
@@ -1605,7 +1857,6 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
-
 
     <span class="k">def</span> <span class="nf">reset_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1677,6 +1928,32 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputimage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crop_document</span> <span class="ow">is</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputface&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">crop_face</span> <span class="ow">is</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputmode&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">output_format</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">enable_dualside_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1986,7 +2263,7 @@ Core API is used to directly scan and validate global driver license, passport, 
                             <div id="CoreAPI.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#CoreAPI.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;client&#39;: &#39;python-sdk&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -2214,6 +2491,97 @@ accuracy on large full-resolution images. Set 0 to disable image resizing.</p>
 :param crop_face: Enable or disable face cropping, defaults to False
 :param output_format: url or base64, defaults to url
 :raises ValueError: Invalid input argument Invalid input argumentInvalid input argument</p>
+</div>
+
+
+                            </div>
+                            <div id="CoreAPI.enable_aml_check" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.enable_aml_check">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">enable_aml_check</span><span class="signature">(self, enabled=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Check document holder's name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</p>
+
+<p>:param enabled: Enable or disable AML/PEP check</p>
+</div>
+
+
+                            </div>
+                            <div id="CoreAPI.set_aml_database" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.set_aml_database">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_aml_database</span><span class="signature">(
+    self,
+    databases=&#39;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&#39;
+)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Specify the source databases to perform AML check, if left blank, all source databases will be checked.
+Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</p>
+
+<p>:param databases: Database codes separated by comma</p>
+</div>
+
+
+                            </div>
+                            <div id="CoreAPI.enable_aml_strict_match" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.enable_aml_strict_match">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">enable_aml_strict_match</span><span class="signature">(self, enabled=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.
+Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</p>
+
+<p>:param enabled: Enable or disable AML strict match mode</p>
 </div>
 
 
@@ -2902,6 +3270,13 @@ optionally specify document back image, face verification image, face verificati
         <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;biometric_threshold&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
         <span class="s2">&quot;reusable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phoneverification&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="s2">&quot;verify_phone&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sms_verification_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;customhtmlurl&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
 
     <span class="p">}</span>
@@ -3128,6 +3503,60 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;dualsidecheck&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
 
+    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">enable_phone_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether to ask user to enter a phone number for verification, DocuPass supports both mobile or landline number verification.</span>
+<span class="sd">        Verified phone number will be returned in callback JSON.</span>
+
+<span class="sd">        :param enabled: Enable or disable user phone verification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;phoneverification&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span>
+
+    <span class="k">def</span> <span class="nf">sms_verification_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_verification_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+
+    <span class="k">def</span> <span class="nf">verify_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will attempt to verify this phone number as part of the identity verification process,</span>
+<span class="sd">        both mobile or landline are supported, users will not be able to enter their own numbers or change the provided number.</span>
+
+<span class="sd">        :param phone_number: Mobile or landline number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;verify_phone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phone_number</span>
+
     <span class="k">def</span> <span class="nf">verify_expiry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the document is still valid based on its expiry date.</span>
@@ -3264,7 +3693,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :param parameter_value: Parameter value</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
-        
+
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -3393,7 +3822,7 @@ DocuPass allows rapid identity verification using a webpage or mobile app</p>
                             <div id="DocuPass.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#DocuPass.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;client&#39;: &#39;python-sdk&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;phoneverification&#39;: False, &#39;verify_phone&#39;: &#39;&#39;, &#39;sms_verification_link&#39;: &#39;&#39;, &#39;customhtmlurl&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -3974,6 +4403,188 @@ a new DocuPass reference code will be generated for each user automatically.</p>
 when performing dual-side scan. If any information mismatches error 14 will be thrown.</p>
 
 <p>:param enabled: Enable or disable dual-side information check, defaults to False</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.enable_aml_check" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.enable_aml_check">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">enable_aml_check</span><span class="signature">(self, enabled=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">enable_aml_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check document holder&#39;s name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML/PEP check</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_check&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Check document holder's name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.</p>
+
+<p>:param enabled: Enable or disable AML/PEP check</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.set_aml_database" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.set_aml_database">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_aml_database</span><span class="signature">(
+    self,
+    databases=&#39;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&#39;
+)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                         <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML check, if left blank, all source databases will be checked.</span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_database&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">databases</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Specify the source databases to perform AML check, if left blank, all source databases will be checked.
+Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</p>
+
+<p>:param databases: Database codes separated by comma</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.enable_aml_strict_match" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.enable_aml_strict_match">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">enable_aml_strict_match</span><span class="signature">(self, enabled=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">enable_aml_strict_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.</span>
+<span class="sd">        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</span>
+
+<span class="sd">        :param enabled: Enable or disable AML strict match mode</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;aml_strict_match&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.
+Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.</p>
+
+<p>:param enabled: Enable or disable AML strict match mode</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.enable_phone_verification" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.enable_phone_verification">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">enable_phone_verification</span><span class="signature">(self, enabled=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">enable_phone_verification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether to ask user to enter a phone number for verification, DocuPass supports both mobile or landline number verification.</span>
+<span class="sd">        Verified phone number will be returned in callback JSON.</span>
+
+<span class="sd">        :param enabled: Enable or disable user phone verification</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;phoneverification&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">enabled</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Whether to ask user to enter a phone number for verification, DocuPass supports both mobile or landline number verification.
+Verified phone number will be returned in callback JSON.</p>
+
+<p>:param enabled: Enable or disable user phone verification</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.sms_verification_link" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.sms_verification_link">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">sms_verification_link</span><span class="signature">(self, mobile_number=&#39;+1333444555&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">sms_verification_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_verification_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.
+You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</p>
+
+<p>:param mobile_number: Mobile number should be provided in international format such as +1333444555</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.verify_phone" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.verify_phone">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">verify_phone</span><span class="signature">(self, phone_number=&#39;+1333444555&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">verify_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will attempt to verify this phone number as part of the identity verification process,</span>
+<span class="sd">        both mobile or landline are supported, users will not be able to enter their own numbers or change the provided number.</span>
+
+<span class="sd">        :param phone_number: Mobile or landline number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;verify_phone&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">phone_number</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>DocuPass will attempt to verify this phone number as part of the identity verification process,
+both mobile or landline are supported, users will not be able to enter their own numbers or change the provided number.</p>
+
+<p>:param phone_number: Mobile or landline number should be provided in international format such as +1333444555</p>
 </div>
 
 
@@ -5297,6 +5908,349 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
             <div class="docstring"><p>Get vault training status</p>
 
 <p>:return Training status
+:rtype dict
+:raises ValueError: Invalid input argument
+:raises APIError: API Error</p>
+</div>
+
+
+                            </div>
+                </section>
+                <section id="AMLAPI">
+                                <div class="attr class">
+        <a class="headerlink" href="#AMLAPI">#&nbsp;&nbsp</a>
+
+        
+        <span class="def">class</span>
+        <span class="name">AMLAPI</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">AMLAPI</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize AML API with an API key, and optional region (US, EU)</span>
+<span class="sd">    AML API allows you to monitor politically exposed persons (PEPs), and discover person or organization on under sanctions from worldwide governments.</span>
+<span class="sd">    ID Analyzer AML solutions allows you to check for comprehensive customer due diligence and Anti Money Laundering (AML) and Know Your Customer (KYC) program.</span>
+
+<span class="sd">    :param apikey: You API key</span>
+<span class="sd">    :param region: API Region US/EU, defaults to US</span>
+<span class="sd">    :raises ValueError: Invalid input argument</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">apikey</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please provide an API key&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/aml&quot;</span>
+        <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/aml&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+
+    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML search, if left blank, all source databases will be checked. </span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+<span class="sd">        </span>
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="n">databases</span>
+
+    <span class="k">def</span> <span class="nf">set_entity_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return only entities with specified entity type, leave blank to return both person and legal entity.</span>
+<span class="sd">        </span>
+<span class="sd">        :param entity_type: &#39;person&#39; or &#39;legalentity&#39;</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;person&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;legalentity&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Entity Type should be either empty, &#39;person&#39; or &#39;legalentity&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="n">entity_type</span>
+
+    <span class="k">def</span> <span class="nf">search_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a person or company&#39;s name or alias</span>
+
+<span class="sd">        :param name: Name or alias to search AML Database</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name should contain at least 3 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">search_by_id_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_number</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a document number (Passport, ID Card or any identification documents)</span>
+
+<span class="sd">        :param document_number: Document ID Number to perform search</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_number</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Document number should contain at least 5 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;documentnumber&quot;</span><span class="p">:</span> <span class="n">document_number</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">__api</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">payload</span><span class="p">:</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;entity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;apikey&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;client&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">client_library</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Initialize AML API with an API key, and optional region (US, EU)
+AML API allows you to monitor politically exposed persons (PEPs), and discover person or organization on under sanctions from worldwide governments.
+ID Analyzer AML solutions allows you to check for comprehensive customer due diligence and Anti Money Laundering (AML) and Know Your Customer (KYC) program.</p>
+
+<p>:param apikey: You API key
+:param region: API Region US/EU, defaults to US
+:raises ValueError: Invalid input argument</p>
+</div>
+
+
+                            <div id="AMLAPI.__init__" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.__init__">#&nbsp;&nbsp</a>
+
+        
+            <span class="name">AMLAPI</span><span class="signature">(apikey, region=&#39;US&#39;)</span>    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apikey</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="s2">&quot;US&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">apikey</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please provide an API key&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Please set an API region (US, EU)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span> <span class="o">=</span> <span class="n">apikey</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;EU&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api-eu.idanalyzer.com/aml&quot;</span>
+        <span class="k">elif</span> <span class="n">region</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;US&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.idanalyzer.com/aml&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">=</span> <span class="n">region</span>
+</pre></div>
+
+        </details>
+
+    
+
+                            </div>
+                            <div id="AMLAPI.throw_api_exception" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.throw_api_exception">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">throw_api_exception</span><span class="signature">(self, throw_exception=False)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">throw_api_exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throw_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Whether an exception should be thrown if API response contains an error message</span>
+
+<span class="sd">        :param throw_exception: Throw exception upon API error, defaults to false</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span> <span class="o">=</span> <span class="n">throw_exception</span> <span class="ow">is</span> <span class="kc">True</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Whether an exception should be thrown if API response contains an error message</p>
+
+<p>:param throw_exception: Throw exception upon API error, defaults to false</p>
+</div>
+
+
+                            </div>
+                            <div id="AMLAPI.set_aml_database" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.set_aml_database">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_aml_database</span><span class="signature">(
+    self,
+    databases=&#39;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&#39;
+)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_aml_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databases</span><span class="o">=</span><span class="s2">&quot;au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Specify the source databases to perform AML search, if left blank, all source databases will be checked. </span>
+<span class="sd">        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</span>
+<span class="sd">        </span>
+<span class="sd">        :param databases: Database codes separated by comma</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLDatabases</span> <span class="o">=</span> <span class="n">databases</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Specify the source databases to perform AML search, if left blank, all source databases will be checked. 
+Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.</p>
+
+<p>:param databases: Database codes separated by comma</p>
+</div>
+
+
+                            </div>
+                            <div id="AMLAPI.set_entity_type" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.set_entity_type">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">set_entity_type</span><span class="signature">(self, entity_type=&#39;&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">set_entity_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return only entities with specified entity type, leave blank to return both person and legal entity.</span>
+<span class="sd">        </span>
+<span class="sd">        :param entity_type: &#39;person&#39; or &#39;legalentity&#39;</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;person&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;legalentity&quot;</span> <span class="ow">and</span> <span class="n">entity_type</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Entity Type should be either empty, &#39;person&#39; or &#39;legalentity&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AMLEntityType</span> <span class="o">=</span> <span class="n">entity_type</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Return only entities with specified entity type, leave blank to return both person and legal entity.</p>
+
+<p>:param entity_type: 'person' or 'legalentity'
+:raises ValueError: Invalid input argument</p>
+</div>
+
+
+                            </div>
+                            <div id="AMLAPI.search_by_name" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.search_by_name">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">search_by_name</span><span class="signature">(self, name=&#39;&#39;, country=&#39;&#39;, dob=&#39;&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">search_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a person or company&#39;s name or alias</span>
+
+<span class="sd">        :param name: Name or alias to search AML Database</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Name should contain at least 3 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Search AML Database using a person or company's name or alias</p>
+
+<p>:param name: Name or alias to search AML Database
+:param country: ISO 2 Country Code
+:param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format
+:return AML match results
+:rtype dict
+:raises ValueError: Invalid input argument
+:raises APIError: API Error</p>
+</div>
+
+
+                            </div>
+                            <div id="AMLAPI.search_by_id_number" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#AMLAPI.search_by_id_number">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">search_by_id_number</span><span class="signature">(self, document_number=&#39;&#39;, country=&#39;&#39;, dob=&#39;&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">search_by_id_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document_number</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">country</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dob</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search AML Database using a document number (Passport, ID Card or any identification documents)</span>
+
+<span class="sd">        :param document_number: Document ID Number to perform search</span>
+<span class="sd">        :param country: ISO 2 Country Code</span>
+<span class="sd">        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format</span>
+<span class="sd">        :return AML match results</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API Error</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">document_number</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Document number should contain at least 5 characters.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__api</span><span class="p">({</span><span class="s2">&quot;documentnumber&quot;</span><span class="p">:</span> <span class="n">document_number</span><span class="p">,</span> <span class="s2">&quot;country&quot;</span><span class="p">:</span> <span class="n">country</span><span class="p">,</span> <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="n">dob</span><span class="p">})</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Search AML Database using a document number (Passport, ID Card or any identification documents)</p>
+
+<p>:param document_number: Document ID Number to perform search
+:param country: ISO 2 Country Code
+:param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format
+:return AML match results
 :rtype dict
 :raises ValueError: Invalid input argument
 :raises APIError: API Error</p>

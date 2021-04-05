@@ -1,7 +1,7 @@
 import idanalyzer
 
 try:
-    # initialize Core API with your api key and region (US/EU)
+    # Initialize Core API with your api key and region (US/EU)
     coreapi = idanalyzer.CoreAPI("Your API Key", "US")
 
     # Raise exceptions for API level errors
@@ -29,6 +29,9 @@ try:
     coreapi.verify_name("Elon Musk") # check if the person is named Elon Musk
     coreapi.verify_address("123 Sunny Rd, California") # check if address on ID matches with provided address
     coreapi.verify_postcode("90001") # check if postcode on ID matches with provided postcode
+    coreapi.enable_aml_check(True)  # enable AML/PEP compliance check
+    coreapi.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
+    coreapi.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
     """
 
     # perform scan

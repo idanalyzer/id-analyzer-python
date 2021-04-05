@@ -59,6 +59,9 @@ class CoreAPI:
         "vault_customdata5": "",
         "barcodemode": False,
         "biometric_threshold": 0.4,
+        "aml_check": False,
+        "aml_strict_match": False,
+        "aml_database": "",
         "client": client_library
     }
 
@@ -84,7 +87,6 @@ class CoreAPI:
         :param throw_exception: Throw exception upon API error, defaults to false
         """
         self.throw_error = throw_exception is True
-
 
     def reset_config(self):
         """
@@ -156,6 +158,32 @@ class CoreAPI:
         self.config['outputimage'] = crop_document is True
         self.config['outputface'] = crop_face is True
         self.config['outputmode'] = output_format
+
+    def enable_aml_check(self, enabled=False):
+        """
+        Check document holder's name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.
+
+        :param enabled: Enable or disable AML/PEP check
+        """
+        self.config["aml_check"] = enabled is True
+
+    def set_aml_database(self, databases="au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red"):
+        """
+        Specify the source databases to perform AML check, if left blank, all source databases will be checked.
+        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.
+
+        :param databases: Database codes separated by comma
+        """
+        self.config["aml_database"] = databases
+
+    def enable_aml_strict_match(self, enabled=False):
+        """
+        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.
+        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.
+
+        :param enabled: Enable or disable AML strict match mode
+        """
+        self.config["aml_strict_match"] = enabled is True
 
     def enable_dualside_check(self, enabled=False):
         """
@@ -467,6 +495,13 @@ class DocuPass:
         "language": "",
         "biometric_threshold": 0.4,
         "reusable": False,
+        "aml_check": False,
+        "aml_strict_match": False,
+        "aml_database": "",
+        "phoneverification": False,
+        "verify_phone": "",
+        "sms_verification_link": "",
+        "customhtmlurl": "",
         "client": client_library
 
     }
@@ -692,6 +727,60 @@ class DocuPass:
         :param enabled: Enable or disable dual-side information check, defaults to False
         """
         self.config['dualsidecheck'] = enabled is True
+
+    def enable_aml_check(self, enabled=False):
+        """
+        Check document holder's name and document number against ID Analyzer AML Database for sanctions, crimes and PEPs.
+
+        :param enabled: Enable or disable AML/PEP check
+        """
+        self.config["aml_check"] = enabled is True
+
+    def set_aml_database(self,
+                         databases="au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red"):
+        """
+        Specify the source databases to perform AML check, if left blank, all source databases will be checked.
+        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.
+
+        :param databases: Database codes separated by comma
+        """
+        self.config["aml_database"] = databases
+
+    def enable_aml_strict_match(self, enabled=False):
+        """
+        By default, entities with identical name or document number will be considered a match even though their birthday or nationality may be unknown.
+        Enable this parameter to reduce false-positives by only matching entities with exact same nationality and birthday.
+
+        :param enabled: Enable or disable AML strict match mode
+        """
+        self.config["aml_strict_match"] = enabled is True
+
+    def enable_phone_verification(self, enabled=False):
+        """
+        Whether to ask user to enter a phone number for verification, DocuPass supports both mobile or landline number verification.
+        Verified phone number will be returned in callback JSON.
+
+        :param enabled: Enable or disable user phone verification
+        """
+        self.config["phoneverification"] = enabled
+
+    def sms_verification_link(self, mobile_number="+1333444555"):
+        """
+        DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.
+        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.
+
+        :param mobile_number: Mobile number should be provided in international format such as +1333444555
+        """
+        self.config["sms_verification_link"] = mobile_number
+
+    def verify_phone(self, phone_number="+1333444555"):
+        """
+        DocuPass will attempt to verify this phone number as part of the identity verification process,
+        both mobile or landline are supported, users will not be able to enter their own numbers or change the provided number.
+
+        :param phone_number: Mobile or landline number should be provided in international format such as +1333444555
+        """
+        self.config["verify_phone"] = phone_number
 
     def verify_expiry(self, enabled=False):
         """
@@ -1151,6 +1240,115 @@ class Vault:
         payload['apikey'] = self.apikey
         payload['client'] = client_library
         r = requests.post(self.apiendpoint + "vault/" + action, data=payload)
+        r.raise_for_status()
+        result = r.json()
+
+        if not self.throw_error:
+            return result
+
+        if result.get('error'):
+            raise APIError(result['error'])
+        else:
+            return result
+
+
+class AMLAPI:
+    """
+    Initialize AML API with an API key, and optional region (US, EU)
+    AML API allows you to monitor politically exposed persons (PEPs), and discover person or organization on under sanctions from worldwide governments.
+    ID Analyzer AML solutions allows you to check for comprehensive customer due diligence and Anti Money Laundering (AML) and Know Your Customer (KYC) program.
+
+    :param apikey: You API key
+    :param region: API Region US/EU, defaults to US
+    :raises ValueError: Invalid input argument
+    """
+    def __init__(self, apikey, region="US"):
+        if not apikey:
+            raise ValueError("Please provide an API key")
+        if not region:
+            raise ValueError("Please set an API region (US, EU)")
+        self.apikey = apikey
+        self.throw_error = False
+        self.AMLDatabases = ""
+        self.AMLEntityType = ""
+        if region.upper() == 'EU':
+            self.apiendpoint = "https://api-eu.idanalyzer.com/aml"
+        elif region.upper() == "US":
+            self.apiendpoint = "https://api.idanalyzer.com/aml"
+        else:
+            self.apiendpoint = region
+
+    def throw_api_exception(self, throw_exception=False):
+        """
+        Whether an exception should be thrown if API response contains an error message
+
+        :param throw_exception: Throw exception upon API error, defaults to false
+        """
+        self.throw_error = throw_exception is True
+
+    def set_aml_database(self, databases="au_dfat,ca_dfatd,ch_seco,eu_fsf,fr_tresor_gels_avoir,gb_hmt,ua_sfms,un_sc,us_ofac,eu_cor,eu_meps,global_politicians,interpol_red"):
+        """
+        Specify the source databases to perform AML search, if left blank, all source databases will be checked. 
+        Separate each database code with comma, for example: un_sc,us_ofac. For full list of source databases and corresponding code visit AML API Overview.
+        
+        :param databases: Database codes separated by comma
+        """
+        self.AMLDatabases = databases
+
+    def set_entity_type(self, entity_type=""):
+        """
+        Return only entities with specified entity type, leave blank to return both person and legal entity.
+        
+        :param entity_type: 'person' or 'legalentity'
+        :raises ValueError: Invalid input argument
+        """
+        if entity_type != "person" and entity_type != "legalentity" and entity_type != "":
+            raise ValueError("Entity Type should be either empty, 'person' or 'legalentity'")
+
+        self.AMLEntityType = entity_type
+
+    def search_by_name(self, name="", country="", dob=""):
+        """
+        Search AML Database using a person or company's name or alias
+
+        :param name: Name or alias to search AML Database
+        :param country: ISO 2 Country Code
+        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format
+        :return AML match results
+        :rtype dict
+        :raises ValueError: Invalid input argument
+        :raises APIError: API Error
+        """
+        if len(name) < 3:
+            raise ValueError("Name should contain at least 3 characters.")
+
+        return self.__api({"name": name, "country": country, "dob": dob})
+
+    def search_by_id_number(self, document_number="", country="", dob=""):
+        """
+        Search AML Database using a document number (Passport, ID Card or any identification documents)
+
+        :param document_number: Document ID Number to perform search
+        :param country: ISO 2 Country Code
+        :param dob: Date of birth in YYYY-MM-DD or YYYY-MM or YYYY format
+        :return AML match results
+        :rtype dict
+        :raises ValueError: Invalid input argument
+        :raises APIError: API Error
+        """
+        if len(document_number) < 5:
+            raise ValueError("Document number should contain at least 5 characters.")
+
+        return self.__api({"documentnumber": document_number, "country": country, "dob": dob})
+
+    def __api(self, payload=None):
+        if not payload:
+            payload = {}
+        payload['database'] = self.AMLDatabases
+        payload['entity'] = self.AMLEntityType
+        payload['apikey'] = self.apikey
+        payload['client'] = client_library
+        r = requests.post(self.apiendpoint, data=payload)
         r.raise_for_status()
         result = r.json()
 

@@ -23,7 +23,7 @@ The sample code below will extract data from this sample Driver License issued i
 import idanalyzer
 
 try:
-    # initialize Core API with your api key and region (US/EU)
+    # Initialize Core API with your api key and region (US/EU)
     coreapi = idanalyzer.CoreAPI("Your API Key", "US")
 
     # Raise exceptions for API level errors
@@ -93,6 +93,9 @@ coreapi.verify_document_number("X1234567") # check if the person's ID number is 
 coreapi.verify_name("Elon Musk") # check if the person is named Elon Musk
 coreapi.verify_address("123 Sunny Rd, California") # check if address on ID matches with provided address
 coreapi.verify_postcode("90001") # check if postcode on ID matches with provided postcode
+coreapi.enable_aml_check(True)  # enable AML/PEP compliance check
+coreapi.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
+coreapi.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
 ```
 
 To **scan both front and back of ID**:
@@ -123,7 +126,7 @@ To start, we will assume you are trying to **verify one of your user that has an
 import idanalyzer
 
 try:
-    # initialize Core API with your api key and region (US/EU)
+    # Initialize Core API with your api key and region (US/EU)
     docupass = idanalyzer.DocuPass("Your API Key", "Your Company Name Inc.", "US")
 
     # Raise exceptions for API level errors
@@ -205,6 +208,13 @@ docupass.verify_document_number("X1234567") # check if the person's ID number is
 docupass.verify_name("Elon Musk") # check if the person is named Elon Musk
 docupass.verify_address("123 Sunny Rd, California") # Check if address on ID matches with provided address
 docupass.verify_postcode("90001") # check if postcode on ID matches with provided postcode
+docupass.set_custom_html_url("https://www.yourwebsite.com/docupass_template.html") # use your own HTML/CSS for DocuPass page
+docupass.sms_verification_link("+1333444555")  # Send verification link to user's mobile phone
+docupass.enable_phone_verification(True)  # get user to input their own phone number for verification
+docupass.verify_phone("+1333444555")  # verify user's phone number you already have in your database
+docupass.enable_aml_check(True)  # enable AML/PEP compliance check
+docupass.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
+docupass.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
 ```
 
 Now you should write a **callback script** or a **webhook**, to receive the verification results.  Visit [DocuPass Callback reference](https://developer.idanalyzer.com/docupass_callback.html) to check out the full payload returned by DocuPass. Callback script is generally programmed in a server environment and is beyond the scope of this guide, you can check out our [PHP SDK](https://github.com/idanalyzer/id-analyzer-php-sdk) for creating a callback script in PHP.
@@ -253,6 +263,46 @@ response = vault.list(filter=["docupass_reference=XXXXXXXXXXXXX"])
 ```
 
 Learn more about [Vault API](https://developer.idanalyzer.com/vaultapi.html).
+
+## AML API
+
+ID Analyzer provides Anti-Money Laundering AML database consolidated from worldwide authorities,  AML API allows our subscribers to lookup the database using either a name or document number. It allows you to instantly check if a person or company is listed under **any kind of sanction, criminal record or is a politically exposed person(PEP)**, as part of your **AML compliance KYC**. You may also use automated check built within Core API and DocuPass.
+
+```python
+import idanalyzer
+
+try:
+    # Initialize AML API with your api key and region (US/EU)
+    aml = idanalyzer.AMLAPI("Your API Key", "US")
+
+    # Raise exceptions for API level errors
+    aml.throw_api_exception(True)
+
+    # Set AML database to only search the PEP category
+    aml.set_aml_database("global_politicians,eu_cors,eu_meps")
+
+    # Search for a politician
+    response1 = aml.search_by_name("Joe Biden")
+
+    print(response1)
+
+    # Set AML database to all databases
+    aml.set_aml_database("")
+
+    # Search for a sanctioned ID number
+    response2 = aml.search_by_id_number("AALH750218HBCLPC02")
+
+    print(response2)
+
+except idanalyzer.APIError as e:
+    # If API returns an error, catch it
+    details = e.args[0]
+    print("API error code: {}, message: {}".format(details["code"], details["message"]))
+except Exception as e:
+    print(e)
+```
+
+Learn more about [AML API](https://developer.idanalyzer.com/amlapi.html).
 
 ## Demo
 
