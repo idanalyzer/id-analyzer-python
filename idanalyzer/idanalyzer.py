@@ -373,13 +373,13 @@ class CoreAPI:
 
         :Keyword Arguments:
             * *document_primary* (``str``) --
-              Front of Document (File path or URL)
+              Front of Document (File path, base64 content or URL)
             * *document_secondary* (``str``) --
-              Back of Document (File path or URL)
+              Back of Document (File path, base64 content or URL)
             * *biometric_photo* (``str``) --
-              Face Photo (File path or URL)
+              Face Photo (File path, base64 content or URL)
             * *biometric_video* (``str``) --
-              Face Video (File path or URL)
+              Face Video (File path, base64 content or URL)
             * *biometric_video* (``str``) --
               Face Video Passcode (4 Digit Number)
 
@@ -400,7 +400,8 @@ class CoreAPI:
         elif os.path.isfile(options['document_primary']):
             with open(options['document_primary'], "rb") as image_file:
                 payload['file_base64'] = base64.b64encode(image_file.read())
-
+        elif len(options['document_primary']) > 100:
+            payload['file_base64'] = options['document_primary']
         else:
             raise ValueError("Invalid primary document image, file not found or malformed URL.")
 
@@ -410,6 +411,8 @@ class CoreAPI:
             elif os.path.isfile(options['document_secondary']):
                 with open(options['document_secondary'], "rb") as image_file:
                     payload['file_back_base64'] = base64.b64encode(image_file.read())
+            elif len(options['document_secondary']) > 100:
+                payload['file_back_base64'] = options['document_secondary']
             else:
                 raise ValueError("Invalid secondary document image, file not found or malformed URL.")
 
@@ -419,6 +422,8 @@ class CoreAPI:
             elif os.path.isfile(options['biometric_photo']):
                 with open(options['biometric_photo'], "rb") as image_file:
                     payload['face_base64'] = base64.b64encode(image_file.read())
+            elif len(options['biometric_photo']) > 100:
+                payload['face_base64'] = options['biometric_photo']
             else:
                 raise ValueError("Invalid face image, file not found or malformed URL.")
 
@@ -428,6 +433,8 @@ class CoreAPI:
             elif os.path.isfile(options['biometric_video']):
                 with open(options['biometric_video'], "rb") as image_file:
                     payload['video_base64'] = base64.b64encode(image_file.read())
+            elif len(options['biometric_video']) > 100:
+                payload['video_base64'] = options['biometric_video']
             else:
                 raise ValueError("Invalid face video, file not found or malformed URL.")
 
@@ -1145,7 +1152,7 @@ class Vault:
         Add a document or face image into an existing vault entry
 
         :param id: Vault entry ID
-        :param image: Image file path or URL
+        :param image: Image file path, base64 content or URL
         :param type: Type of image: 0 = document, 1 = person
         :return New image object
         :rtype dict
@@ -1164,6 +1171,8 @@ class Vault:
         elif os.path.isfile(image):
             with open(image, "rb") as image_file:
                 payload['image'] = base64.b64encode(image_file.read())
+        elif len(image) > 100:
+            payload['image'] = image
         else:
             raise ValueError("Invalid image, file not found or malformed URL.")
 
@@ -1192,7 +1201,7 @@ class Vault:
         """
         Search vault using a person's face image
 
-        :param image: Face image file path or URL
+        :param image: Face image file path, base64 content or URL
         :param max_entry: Number of entries to return, 1 to 10.
         :param threshold: Minimum confidence score required for face matching
         :return List of vault entries
@@ -1206,6 +1215,8 @@ class Vault:
         elif os.path.isfile(image):
             with open(image, "rb") as image_file:
                 payload['image'] = base64.b64encode(image_file.read())
+        elif len(image) > 100:
+            payload['image'] = image
         else:
             raise ValueError("Invalid image, file not found or malformed URL.")
 

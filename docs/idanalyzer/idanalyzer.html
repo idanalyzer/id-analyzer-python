@@ -712,13 +712,13 @@ idanalyzer.idanalyzer    </h1>
 
 <span class="sd">        :Keyword Arguments:</span>
 <span class="sd">            * *document_primary* (``str``) --</span>
-<span class="sd">              Front of Document (File path or URL)</span>
+<span class="sd">              Front of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *document_secondary* (``str``) --</span>
-<span class="sd">              Back of Document (File path or URL)</span>
+<span class="sd">              Back of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_photo* (``str``) --</span>
-<span class="sd">              Face Photo (File path or URL)</span>
+<span class="sd">              Face Photo (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
-<span class="sd">              Face Video (File path or URL)</span>
+<span class="sd">              Face Video (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
 <span class="sd">              Face Video Passcode (4 Digit Number)</span>
 
@@ -739,7 +739,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid primary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -749,6 +750,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid secondary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -758,6 +761,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -767,6 +772,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face video, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -1484,7 +1491,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        Add a document or face image into an existing vault entry</span>
 
 <span class="sd">        :param id: Vault entry ID</span>
-<span class="sd">        :param image: Image file path or URL</span>
+<span class="sd">        :param image: Image file path, base64 content or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
 <span class="sd">        :rtype dict</span>
@@ -1503,6 +1510,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -1531,7 +1540,7 @@ idanalyzer.idanalyzer    </h1>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search vault using a person&#39;s face image</span>
 
-<span class="sd">        :param image: Face image file path or URL</span>
+<span class="sd">        :param image: Face image file path, base64 content or URL</span>
 <span class="sd">        :param max_entry: Number of entries to return, 1 to 10.</span>
 <span class="sd">        :param threshold: Minimum confidence score required for face matching</span>
 <span class="sd">        :return List of vault entries</span>
@@ -1545,6 +1554,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -2143,13 +2154,13 @@ idanalyzer.idanalyzer    </h1>
 
 <span class="sd">        :Keyword Arguments:</span>
 <span class="sd">            * *document_primary* (``str``) --</span>
-<span class="sd">              Front of Document (File path or URL)</span>
+<span class="sd">              Front of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *document_secondary* (``str``) --</span>
-<span class="sd">              Back of Document (File path or URL)</span>
+<span class="sd">              Back of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_photo* (``str``) --</span>
-<span class="sd">              Face Photo (File path or URL)</span>
+<span class="sd">              Face Photo (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
-<span class="sd">              Face Video (File path or URL)</span>
+<span class="sd">              Face Video (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
 <span class="sd">              Face Video Passcode (4 Digit Number)</span>
 
@@ -2170,7 +2181,8 @@ idanalyzer.idanalyzer    </h1>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid primary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -2180,6 +2192,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid secondary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -2189,6 +2203,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -2198,6 +2214,8 @@ idanalyzer.idanalyzer    </h1>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face video, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -3108,13 +3126,13 @@ this can be useful for filtering and searching entries.</p>
 
 <span class="sd">        :Keyword Arguments:</span>
 <span class="sd">            * *document_primary* (``str``) --</span>
-<span class="sd">              Front of Document (File path or URL)</span>
+<span class="sd">              Front of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *document_secondary* (``str``) --</span>
-<span class="sd">              Back of Document (File path or URL)</span>
+<span class="sd">              Back of Document (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_photo* (``str``) --</span>
-<span class="sd">              Face Photo (File path or URL)</span>
+<span class="sd">              Face Photo (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
-<span class="sd">              Face Video (File path or URL)</span>
+<span class="sd">              Face Video (File path, base64 content or URL)</span>
 <span class="sd">            * *biometric_video* (``str``) --</span>
 <span class="sd">              Face Video Passcode (4 Digit Number)</span>
 
@@ -3135,7 +3153,8 @@ this can be useful for filtering and searching entries.</p>
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_primary&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid primary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -3145,6 +3164,8 @@ this can be useful for filtering and searching entries.</p>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;file_back_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;document_secondary&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid secondary document image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -3154,6 +3175,8 @@ this can be useful for filtering and searching entries.</p>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;face_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_photo&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -3163,6 +3186,8 @@ this can be useful for filtering and searching entries.</p>
             <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]):</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">],</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                     <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;video_base64&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;biometric_video&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid face video, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -3195,13 +3220,13 @@ optionally specify document back image, face verification image, face verificati
 
 <p>:Keyword Arguments:
     * <em>document_primary</em> (<code>str</code>) --
-      Front of Document (File path or URL)
+      Front of Document (File path, base64 content or URL)
     * <em>document_secondary</em> (<code>str</code>) --
-      Back of Document (File path or URL)
+      Back of Document (File path, base64 content or URL)
     * <em>biometric_photo</em> (<code>str</code>) --
-      Face Photo (File path or URL)
+      Face Photo (File path, base64 content or URL)
     * <em>biometric_video</em> (<code>str</code>) --
-      Face Video (File path or URL)
+      Face Video (File path, base64 content or URL)
     * <em>biometric_video</em> (<code>str</code>) --
       Face Video Passcode (4 Digit Number)</p>
 
@@ -5305,7 +5330,7 @@ You can list, search and update document entries in your vault through Vault API
 <span class="sd">        Add a document or face image into an existing vault entry</span>
 
 <span class="sd">        :param id: Vault entry ID</span>
-<span class="sd">        :param image: Image file path or URL</span>
+<span class="sd">        :param image: Image file path, base64 content or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
 <span class="sd">        :rtype dict</span>
@@ -5324,6 +5349,8 @@ You can list, search and update document entries in your vault through Vault API
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -5352,7 +5379,7 @@ You can list, search and update document entries in your vault through Vault API
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search vault using a person&#39;s face image</span>
 
-<span class="sd">        :param image: Face image file path or URL</span>
+<span class="sd">        :param image: Face image file path, base64 content or URL</span>
 <span class="sd">        :param max_entry: Number of entries to return, 1 to 10.</span>
 <span class="sd">        :param threshold: Minimum confidence score required for face matching</span>
 <span class="sd">        :return List of vault entries</span>
@@ -5366,6 +5393,8 @@ You can list, search and update document entries in your vault through Vault API
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -5714,7 +5743,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
 <span class="sd">        Add a document or face image into an existing vault entry</span>
 
 <span class="sd">        :param id: Vault entry ID</span>
-<span class="sd">        :param image: Image file path or URL</span>
+<span class="sd">        :param image: Image file path, base64 content or URL</span>
 <span class="sd">        :param type: Type of image: 0 = document, 1 = person</span>
 <span class="sd">        :return New image object</span>
 <span class="sd">        :rtype dict</span>
@@ -5733,6 +5762,8 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -5744,7 +5775,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
             <div class="docstring"><p>Add a document or face image into an existing vault entry</p>
 
 <p>:param id: Vault entry ID
-:param image: Image file path or URL
+:param image: Image file path, base64 content or URL
 :param type: Type of image: 0 = document, 1 = person
 :return New image object
 :rtype dict
@@ -5812,7 +5843,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search vault using a person&#39;s face image</span>
 
-<span class="sd">        :param image: Face image file path or URL</span>
+<span class="sd">        :param image: Face image file path, base64 content or URL</span>
 <span class="sd">        :param max_entry: Number of entries to return, 1 to 10.</span>
 <span class="sd">        :param threshold: Minimum confidence score required for face matching</span>
 <span class="sd">        :return List of vault entries</span>
@@ -5826,6 +5857,8 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
         <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image_file</span><span class="p">:</span>
                 <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">image_file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+            <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;image&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">image</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid image, file not found or malformed URL.&quot;</span><span class="p">)</span>
 
@@ -5836,7 +5869,7 @@ Refer to https://developer.idanalyzer.com/vaultapi.html for filter statements an
 
             <div class="docstring"><p>Search vault using a person's face image</p>
 
-<p>:param image: Face image file path or URL
+<p>:param image: Face image file path, base64 content or URL
 :param max_entry: Number of entries to return, 1 to 10.
 :param threshold: Minimum confidence score required for face matching
 :return List of vault entries
