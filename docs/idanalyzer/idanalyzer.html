@@ -116,6 +116,9 @@
                                 <a class="function" href="#CoreAPI.set_vault_data">set_vault_data</a>
                         </li>
                         <li>
+                                <a class="function" href="#CoreAPI.generate_contract">generate_contract</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#CoreAPI.set_parameter">set_parameter</a>
                         </li>
                         <li>
@@ -200,6 +203,9 @@
                                 <a class="function" href="#DocuPass.sms_verification_link">sms_verification_link</a>
                         </li>
                         <li>
+                                <a class="function" href="#DocuPass.sms_contract_link">sms_contract_link</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#DocuPass.verify_phone">verify_phone</a>
                         </li>
                         <li>
@@ -237,6 +243,15 @@
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.set_parameter">set_parameter</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.generate_contract">generate_contract</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.sign_contract">sign_contract</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#DocuPass.create_signature">create_signature</a>
                         </li>
                         <li>
                                 <a class="function" href="#DocuPass.create_iframe">create_iframe</a>
@@ -401,6 +416,9 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_generate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_format&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_prefill_data&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
@@ -693,6 +711,24 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data5</span>
 
+    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
     <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
@@ -848,6 +884,11 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;verify_phone&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;sms_verification_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;customhtmlurl&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_generate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_sign&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_format&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_prefill_data&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sms_contract_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
 
     <span class="p">}</span>
@@ -953,7 +994,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL, the host does not appear to be a remote host.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;callbackurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
@@ -969,10 +1010,10 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param fail_url: Redirection URL after verification failed</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for success URL&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fail_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for fail URL&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;successredir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">success_url</span>
@@ -1118,6 +1159,15 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_verification_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+
+    <span class="k">def</span> <span class="nf">sms_contract_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to review and sign legal document. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_contract_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
 
     <span class="k">def</span> <span class="nf">verify_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1265,6 +1315,76 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
 
+    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+    <span class="k">def</span> <span class="nf">sign_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Have user review and sign autofilled legal document after successful identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a DocuPass signature session for user to review and sign legal document without identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :return DocuPass signature request response</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;apikey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;template_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/sign&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -1272,6 +1392,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -1282,6 +1403,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -1292,6 +1414,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
@@ -1302,6 +1425,7 @@ idanalyzer.idanalyzer    </h1>
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
@@ -1843,6 +1967,9 @@ idanalyzer.idanalyzer    </h1>
         <span class="s2">&quot;aml_check&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;aml_strict_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="s2">&quot;aml_database&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_generate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_format&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_prefill_data&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
     <span class="p">}</span>
 
@@ -2135,6 +2262,24 @@ idanalyzer.idanalyzer    </h1>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata4&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;vault_customdata5&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data5</span>
 
+    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
     <span class="k">def</span> <span class="nf">set_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter_key</span><span class="p">,</span> <span class="n">parameter_value</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions</span>
@@ -2281,7 +2426,7 @@ Core API is used to directly scan and validate global driver license, passport, 
                             <div id="CoreAPI.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#CoreAPI.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;accuracy&#39;: 2, &#39;authenticate&#39;: False, &#39;authenticate_module&#39;: 1, &#39;ocr_scaledown&#39;: 2000, &#39;outputimage&#39;: False, &#39;outputface&#39;: False, &#39;outputmode&#39;: &#39;url&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: True, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;country&#39;: &#39;&#39;, &#39;region&#39;: &#39;&#39;, &#39;type&#39;: &#39;&#39;, &#39;checkblocklist&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;vault_saveunrecognized&#39;: &#39;&#39;, &#39;vault_noduplicate&#39;: &#39;&#39;, &#39;vault_automerge&#39;: &#39;&#39;, &#39;vault_customdata1&#39;: &#39;&#39;, &#39;vault_customdata2&#39;: &#39;&#39;, &#39;vault_customdata3&#39;: &#39;&#39;, &#39;vault_customdata4&#39;: &#39;&#39;, &#39;vault_customdata5&#39;: &#39;&#39;, &#39;barcodemode&#39;: False, &#39;biometric_threshold&#39;: 0.4, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;contract_generate&#39;: &#39;&#39;, &#39;contract_format&#39;: &#39;&#39;, &#39;contract_prefill_data&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -3076,6 +3221,47 @@ this can be useful for filtering and searching entries.</p>
 
 
                             </div>
+                            <div id="CoreAPI.generate_contract" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CoreAPI.generate_contract">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">generate_contract</span><span class="signature">(self, template_id, out_format=&#39;PDF&#39;, prefill_data=None)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Generate legal document using data from user uploaded ID</p>
+
+<p>:param template_id: Contract Template ID displayed under web portal
+:param out_format: Output file format: PDF, DOCX or HTML
+:param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+:raises ValueError: Invalid input argument</p>
+</div>
+
+
+                            </div>
                             <div id="CoreAPI.set_parameter" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#CoreAPI.set_parameter">#&nbsp;&nbsp</a>
 
@@ -3302,6 +3488,11 @@ optionally specify document back image, face verification image, face verificati
         <span class="s2">&quot;verify_phone&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;sms_verification_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;customhtmlurl&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_generate&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_sign&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_format&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;contract_prefill_data&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sms_contract_link&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="n">client_library</span>
 
     <span class="p">}</span>
@@ -3407,7 +3598,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL, the host does not appear to be a remote host.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;callbackurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
@@ -3423,10 +3614,10 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :param fail_url: Redirection URL after verification failed</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for success URL&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fail_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for fail URL&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;successredir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">success_url</span>
@@ -3572,6 +3763,15 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_verification_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+
+    <span class="k">def</span> <span class="nf">sms_contract_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to review and sign legal document. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_contract_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
 
     <span class="k">def</span> <span class="nf">verify_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phone_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -3719,6 +3919,76 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">parameter_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">parameter_value</span>
 
+    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+    <span class="k">def</span> <span class="nf">sign_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Have user review and sign autofilled legal document after successful identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a DocuPass signature session for user to review and sign legal document without identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :return DocuPass signature request response</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;apikey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;template_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/sign&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
     <span class="k">def</span> <span class="nf">create_iframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a DocuPass session for embedding in web page as iframe</span>
@@ -3726,6 +3996,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
@@ -3736,6 +4007,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
@@ -3746,6 +4018,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
@@ -3756,6 +4029,7 @@ optionally specify document back image, face verification image, face verificati
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
@@ -3847,7 +4121,7 @@ DocuPass allows rapid identity verification using a webpage or mobile app</p>
                             <div id="DocuPass.DEFAULT_CONFIG" class="classattr">
                                             <div class="attr variable"><a class="headerlink" href="#DocuPass.DEFAULT_CONFIG">#&nbsp;&nbsp</a>
 
-        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;phoneverification&#39;: False, &#39;verify_phone&#39;: &#39;&#39;, &#39;sms_verification_link&#39;: &#39;&#39;, &#39;customhtmlurl&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
+        <span class="name">DEFAULT_CONFIG</span><span class="default_value"> = {&#39;companyname&#39;: &#39;&#39;, &#39;callbackurl&#39;: &#39;&#39;, &#39;biometric&#39;: 0, &#39;authenticate_minscore&#39;: 0, &#39;authenticate_module&#39;: 2, &#39;maxattempt&#39;: 1, &#39;documenttype&#39;: &#39;&#39;, &#39;documentcountry&#39;: &#39;&#39;, &#39;documentregion&#39;: &#39;&#39;, &#39;dualsidecheck&#39;: False, &#39;verify_expiry&#39;: False, &#39;verify_documentno&#39;: &#39;&#39;, &#39;verify_name&#39;: &#39;&#39;, &#39;verify_dob&#39;: &#39;&#39;, &#39;verify_age&#39;: &#39;&#39;, &#39;verify_address&#39;: &#39;&#39;, &#39;verify_postcode&#39;: &#39;&#39;, &#39;successredir&#39;: &#39;&#39;, &#39;failredir&#39;: &#39;&#39;, &#39;customid&#39;: &#39;&#39;, &#39;vault_save&#39;: True, &#39;return_documentimage&#39;: True, &#39;return_faceimage&#39;: True, &#39;return_type&#39;: 1, &#39;qr_color&#39;: &#39;&#39;, &#39;qr_bgcolor&#39;: &#39;&#39;, &#39;qr_size&#39;: &#39;&#39;, &#39;qr_margin&#39;: &#39;&#39;, &#39;welcomemessage&#39;: &#39;&#39;, &#39;nobranding&#39;: &#39;&#39;, &#39;logo&#39;: &#39;&#39;, &#39;language&#39;: &#39;&#39;, &#39;biometric_threshold&#39;: 0.4, &#39;reusable&#39;: False, &#39;aml_check&#39;: False, &#39;aml_strict_match&#39;: False, &#39;aml_database&#39;: &#39;&#39;, &#39;phoneverification&#39;: False, &#39;verify_phone&#39;: &#39;&#39;, &#39;sms_verification_link&#39;: &#39;&#39;, &#39;customhtmlurl&#39;: &#39;&#39;, &#39;contract_generate&#39;: &#39;&#39;, &#39;contract_sign&#39;: &#39;&#39;, &#39;contract_format&#39;: &#39;&#39;, &#39;contract_prefill_data&#39;: &#39;&#39;, &#39;sms_contract_link&#39;: &#39;&#39;, &#39;client&#39;: &#39;python-sdk&#39;}</span>
     </div>
 
     
@@ -4127,7 +4401,7 @@ Set this parameter to override automatic language detection.</p>
 <span class="sd">        :param url: Callback URL</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL, the host does not appear to be a remote host.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;callbackurl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">url</span>
@@ -4168,10 +4442,10 @@ Set this parameter to override automatic language detection.</p>
 <span class="sd">        :param fail_url: Redirection URL after verification failed</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">success_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">success_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for success URL&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fail_url</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_valid_url</span><span class="p">(</span><span class="n">fail_url</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid URL format for fail URL&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;successredir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">success_url</span>
@@ -4577,6 +4851,36 @@ Verified phone number will be returned in callback JSON.</p>
         </details>
 
             <div class="docstring"><p>DocuPass will send SMS to this number containing DocuPass link to perform identity verification, the number provided will be automatically considered as verified if user completes identity verification. If an invalid or unreachable number is provided error 1050 will be thrown.
+You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</p>
+
+<p>:param mobile_number: Mobile number should be provided in international format such as +1333444555</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.sms_contract_link" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.sms_contract_link">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">sms_contract_link</span><span class="signature">(self, mobile_number=&#39;+1333444555&#39;)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">sms_contract_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mobile_number</span><span class="o">=</span><span class="s2">&quot;+1333444555&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        DocuPass will send SMS to this number containing DocuPass link to review and sign legal document. If an invalid or unreachable number is provided error 1050 will be thrown.</span>
+<span class="sd">        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</span>
+
+<span class="sd">        :param mobile_number: Mobile number should be provided in international format such as +1333444555</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;sms_contract_link&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mobile_number</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>DocuPass will send SMS to this number containing DocuPass link to review and sign legal document. If an invalid or unreachable number is provided error 1050 will be thrown.
 You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.</p>
 
 <p>:param mobile_number: Mobile number should be provided in international format such as +1333444555</p>
@@ -4999,6 +5303,148 @@ You can list, search and update document entries in your vault through Vault API
 
 
                             </div>
+                            <div id="DocuPass.generate_contract" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.generate_contract">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">generate_contract</span><span class="signature">(self, template_id, out_format=&#39;PDF&#39;, prefill_data=None)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">generate_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generate legal document using data from user uploaded ID</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Generate legal document using data from user uploaded ID</p>
+
+<p>:param template_id: Contract Template ID displayed under web portal
+:param out_format: Output file format: PDF, DOCX or HTML
+:param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+:raises ValueError: Invalid input argument</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.sign_contract" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.sign_contract">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">sign_contract</span><span class="signature">(self, template_id, out_format=&#39;PDF&#39;, prefill_data=None)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">sign_contract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Have user review and sign autofilled legal document after successful identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_generate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_sign&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Have user review and sign autofilled legal document after successful identity verification</p>
+
+<p>:param template_id: Contract Template ID displayed under web portal
+:param out_format: Output file format: PDF, DOCX or HTML
+:param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+:raises ValueError: Invalid input argument</p>
+</div>
+
+
+                            </div>
+                            <div id="DocuPass.create_signature" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#DocuPass.create_signature">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">create_signature</span><span class="signature">(self, template_id, out_format=&#39;PDF&#39;, prefill_data=None)</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>    <span class="k">def</span> <span class="nf">create_signature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">template_id</span><span class="p">,</span> <span class="n">out_format</span><span class="o">=</span><span class="s2">&quot;PDF&quot;</span><span class="p">,</span> <span class="n">prefill_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a DocuPass signature session for user to review and sign legal document without identity verification</span>
+
+<span class="sd">        :param template_id: Contract Template ID displayed under web portal</span>
+<span class="sd">        :param out_format: Output file format: PDF, DOCX or HTML</span>
+<span class="sd">        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.</span>
+<span class="sd">        :return DocuPass signature request response</span>
+<span class="sd">        :rtype dict</span>
+<span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">prefill_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prefill_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">template_id</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid template ID&quot;</span><span class="p">)</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;apikey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">apikey</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;template_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">template_id</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_format&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">out_format</span>
+        <span class="n">payload</span><span class="p">[</span><span class="s1">&#39;contract_prefill_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prefill_data</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apiendpoint</span> <span class="o">+</span> <span class="s2">&quot;docupass/sign&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+        <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">throw_error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">APIError</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Create a DocuPass signature session for user to review and sign legal document without identity verification</p>
+
+<p>:param template_id: Contract Template ID displayed under web portal
+:param out_format: Output file format: PDF, DOCX or HTML
+:param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+:return DocuPass signature request response
+:rtype dict
+:raises ValueError: Invalid input argument
+:raises APIError: API error exception</p>
+</div>
+
+
+                            </div>
                             <div id="DocuPass.create_iframe" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#DocuPass.create_iframe">#&nbsp;&nbsp</a>
 
@@ -5016,6 +5462,7 @@ You can list, search and update document entries in your vault through Vault API
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
@@ -5026,7 +5473,8 @@ You can list, search and update document entries in your vault through Vault API
 
 <p>:return DocuPass verification request response
 :rtype dict
-:raises ValueError: Invalid input argument</p>
+:raises ValueError: Invalid input argument
+:raises APIError: API error exception</p>
 </div>
 
 
@@ -5048,6 +5496,7 @@ You can list, search and update document entries in your vault through Vault API
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
@@ -5058,7 +5507,8 @@ You can list, search and update document entries in your vault through Vault API
 
 <p>:return DocuPass verification request response
 :rtype dict
-:raises ValueError: Invalid input argument</p>
+:raises ValueError: Invalid input argument
+:raises APIError: API error exception</p>
 </div>
 
 
@@ -5080,6 +5530,7 @@ You can list, search and update document entries in your vault through Vault API
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
@@ -5090,7 +5541,8 @@ You can list, search and update document entries in your vault through Vault API
 
 <p>:return DocuPass verification request response
 :rtype dict
-:raises ValueError: Invalid input argument</p>
+:raises ValueError: Invalid input argument
+:raises APIError: API error exception</p>
 </div>
 
 
@@ -5112,6 +5564,7 @@ You can list, search and update document entries in your vault through Vault API
 <span class="sd">        :return DocuPass verification request response</span>
 <span class="sd">        :rtype dict</span>
 <span class="sd">        :raises ValueError: Invalid input argument</span>
+<span class="sd">        :raises APIError: API error exception</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
@@ -5122,7 +5575,8 @@ You can list, search and update document entries in your vault through Vault API
 
 <p>:return DocuPass verification request response
 :rtype dict
-:raises ValueError: Invalid input argument</p>
+:raises ValueError: Invalid input argument
+:raises APIError: API error exception</p>
 </div>
 
 

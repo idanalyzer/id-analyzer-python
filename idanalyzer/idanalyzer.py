@@ -62,6 +62,9 @@ class CoreAPI:
         "aml_check": False,
         "aml_strict_match": False,
         "aml_database": "",
+        "contract_generate": "",
+        "contract_format": "",
+        "contract_prefill_data": "",
         "client": client_library
     }
 
@@ -354,6 +357,24 @@ class CoreAPI:
         self.config['vault_customdata4'] = data4
         self.config['vault_customdata5'] = data5
 
+    def generate_contract(self, template_id, out_format="PDF", prefill_data=None):
+        """
+        Generate legal document using data from user uploaded ID
+
+        :param template_id: Contract Template ID displayed under web portal
+        :param out_format: Output file format: PDF, DOCX or HTML
+        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+        :raises ValueError: Invalid input argument
+        """
+        if prefill_data is None:
+            prefill_data = {}
+        if not template_id:
+            raise ValueError("Invalid template ID")
+
+        self.config['contract_generate'] = template_id
+        self.config['contract_format'] = out_format
+        self.config['contract_prefill_data'] = prefill_data
+
     def set_parameter(self, parameter_key, parameter_value):
         """
         Set an API parameter and its value, this function allows you to set any API parameter without using the built-in functions
@@ -509,6 +530,11 @@ class DocuPass:
         "verify_phone": "",
         "sms_verification_link": "",
         "customhtmlurl": "",
+        "contract_generate": "",
+        "contract_sign": "",
+        "contract_format": "",
+        "contract_prefill_data": "",
+        "sms_contract_link": "",
         "client": client_library
 
     }
@@ -614,7 +640,7 @@ class DocuPass:
         :param url: Callback URL
         :raises ValueError: Invalid input argument
         """
-        if not is_valid_url(url):
+        if url and not is_valid_url(url):
             raise ValueError("Invalid URL, the host does not appear to be a remote host.")
 
         self.config['callbackurl'] = url
@@ -630,10 +656,10 @@ class DocuPass:
         :param fail_url: Redirection URL after verification failed
         :raises ValueError: Invalid input argument
         """
-        if not is_valid_url(success_url):
+        if success_url and not is_valid_url(success_url):
             raise ValueError("Invalid URL format for success URL")
 
-        if not is_valid_url(fail_url):
+        if fail_url and not is_valid_url(fail_url):
             raise ValueError("Invalid URL format for fail URL")
 
         self.config['successredir'] = success_url
@@ -779,6 +805,15 @@ class DocuPass:
         :param mobile_number: Mobile number should be provided in international format such as +1333444555
         """
         self.config["sms_verification_link"] = mobile_number
+
+    def sms_contract_link(self, mobile_number="+1333444555"):
+        """
+        DocuPass will send SMS to this number containing DocuPass link to review and sign legal document. If an invalid or unreachable number is provided error 1050 will be thrown.
+        You should add your own thresholding mechanism to prevent abuse as you will be charged 1 quota to send the SMS.
+
+        :param mobile_number: Mobile number should be provided in international format such as +1333444555
+        """
+        self.config["sms_contract_link"] = mobile_number
 
     def verify_phone(self, phone_number="+1333444555"):
         """
@@ -926,6 +961,76 @@ class DocuPass:
         """
         self.config[parameter_key] = parameter_value
 
+    def generate_contract(self, template_id, out_format="PDF", prefill_data=None):
+        """
+        Generate legal document using data from user uploaded ID
+
+        :param template_id: Contract Template ID displayed under web portal
+        :param out_format: Output file format: PDF, DOCX or HTML
+        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+        :raises ValueError: Invalid input argument
+        """
+        if prefill_data is None:
+            prefill_data = {}
+        if not template_id:
+            raise ValueError("Invalid template ID")
+        self.config['contract_sign'] = ""
+        self.config['contract_generate'] = template_id
+        self.config['contract_format'] = out_format
+        self.config['contract_prefill_data'] = prefill_data
+
+    def sign_contract(self, template_id, out_format="PDF", prefill_data=None):
+        """
+        Have user review and sign autofilled legal document after successful identity verification
+
+        :param template_id: Contract Template ID displayed under web portal
+        :param out_format: Output file format: PDF, DOCX or HTML
+        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+        :raises ValueError: Invalid input argument
+        """
+        if prefill_data is None:
+            prefill_data = {}
+        if not template_id:
+            raise ValueError("Invalid template ID")
+        self.config['contract_generate'] = ""
+        self.config['contract_sign'] = template_id
+        self.config['contract_format'] = out_format
+        self.config['contract_prefill_data'] = prefill_data
+
+    def create_signature(self,  template_id, out_format="PDF", prefill_data=None):
+        """
+        Create a DocuPass signature session for user to review and sign legal document without identity verification
+
+        :param template_id: Contract Template ID displayed under web portal
+        :param out_format: Output file format: PDF, DOCX or HTML
+        :param prefill_data: Dictionary or JSON string, to autofill dynamic fields in contract template.
+        :return DocuPass signature request response
+        :rtype dict
+        :raises ValueError: Invalid input argument
+        :raises APIError: API error exception
+        """
+        if prefill_data is None:
+            prefill_data = {}
+        if not template_id:
+            raise ValueError("Invalid template ID")
+        payload = self.config
+        payload["apikey"] = self.apikey
+        payload["template_id"] = template_id
+        payload['contract_format'] = out_format
+        payload['contract_prefill_data'] = prefill_data
+
+        r = requests.post(self.apiendpoint + "docupass/sign", data=payload)
+        r.raise_for_status()
+        result = r.json()
+
+        if not self.throw_error:
+            return result
+
+        if result.get('error'):
+            raise APIError(result['error'])
+        else:
+            return result
+
     def create_iframe(self):
         """
         Create a DocuPass session for embedding in web page as iframe
@@ -933,6 +1038,7 @@ class DocuPass:
         :return DocuPass verification request response
         :rtype dict
         :raises ValueError: Invalid input argument
+        :raises APIError: API error exception
         """
         return self.__create(0)
 
@@ -943,6 +1049,7 @@ class DocuPass:
         :return DocuPass verification request response
         :rtype dict
         :raises ValueError: Invalid input argument
+        :raises APIError: API error exception
         """
         return self.__create(1)
 
@@ -953,6 +1060,7 @@ class DocuPass:
         :return DocuPass verification request response
         :rtype dict
         :raises ValueError: Invalid input argument
+        :raises APIError: API error exception
         """
         return self.__create(2)
 
@@ -963,6 +1071,7 @@ class DocuPass:
         :return DocuPass verification request response
         :rtype dict
         :raises ValueError: Invalid input argument
+        :raises APIError: API error exception
         """
         return self.__create(3)
 

@@ -58,6 +58,8 @@ try:
     docupass.enable_aml_check(True)  # enable AML/PEP compliance check
     docupass.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
     docupass.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
+    docupass.generate_contract("Template ID", "PDF", {"somevariable": "somevalue"}) # automate paperwork by generating a document autofilled with ID data
+    docupass.sign_contract("Template ID", "PDF", {"somevariable": "somevalue"}) # get user to review and sign legal document prefilled with ID data
     """
 
 

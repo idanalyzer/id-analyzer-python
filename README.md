@@ -13,7 +13,7 @@ pip install idanalyzer
 
 ## Core API
 
-[ID Analyzer Core API](https://www.idanalyzer.com/products/id-analyzer-core-api.html) allows you to perform OCR data extraction, facial biometric verification, identity verification, age verification, document cropping, document authentication (fake ID check) using an ID image (JPG, PNG, PDF accepted) and user selfie photo or video. Core API has great global coverage, supporting over 98% of the passports, driver licenses and identification cards currently being circulated around the world.
+[ID Analyzer Core API](https://www.idanalyzer.com/products/id-analyzer-core-api.html) allows you to perform OCR data extraction, facial biometric verification, identity verification, age verification, document cropping, document authentication (fake ID check), and paperwork automation using an ID image (JPG, PNG, PDF accepted) and user selfie photo or video. Core API has great global coverage, supporting over 98% of the passports, driver licenses and identification cards currently being circulated around the world.
 
 ![Sample ID](https://www.idanalyzer.com/img/sampleid1.jpg)
 
@@ -96,6 +96,7 @@ coreapi.verify_postcode("90001") # check if postcode on ID matches with provided
 coreapi.enable_aml_check(True)  # enable AML/PEP compliance check
 coreapi.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
 coreapi.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
+coreapi.generate_contract("Template ID", "PDF", {"email":"user@example.com"}); # generate a PDF document autofilled with data from user ID
 ```
 
 To **scan both front and back of ID**:
@@ -215,11 +216,66 @@ docupass.verify_phone("+1333444555")  # verify user's phone number you already h
 docupass.enable_aml_check(True)  # enable AML/PEP compliance check
 docupass.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
 docupass.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
+docupass.generate_contract("Template ID", "PDF", {"somevariable": "somevalue"}) # automate paperwork by generating a document autofilled with ID data
+docupass.sign_contract("Template ID", "PDF", {"somevariable": "somevalue"}) # get user to review and sign legal document prefilled with ID data
 ```
 
 Now you should write a **callback script** or a **webhook**, to receive the verification results.  Visit [DocuPass Callback reference](https://developer.idanalyzer.com/docupass_callback.html) to check out the full payload returned by DocuPass. Callback script is generally programmed in a server environment and is beyond the scope of this guide, you can check out our [PHP SDK](https://github.com/idanalyzer/id-analyzer-php-sdk) for creating a callback script in PHP.
 
 For the final step, you could create two web pages (URLS set via `set_redirection_url`) that display the results to your user. DocuPass reference will be passed as a GET parameter when users are redirected, for example: https://www.your-website.com/verification_succeeded.php?reference=XXXXXXXXX, you could use the reference code to fetch the results from your database. P.S. We will always send callbacks to your server before redirecting your user to the set URL.
+
+## DocuPass Signature API
+
+You can get user to review and remotely sign legal document in DocuPass without identity verification, to do so you need to create a DocuPass Signature session.
+
+```python
+# Initialize DocuPass API with your api key and region (US/EU)
+docupass = idanalyzer.DocuPass("Your API Key", "Your Company Name Inc.", "US")
+
+# Raise exceptions for API level errors
+docupass.throw_api_exception(True)
+
+# We need to set an identifier so that we know internally who is signing the document,
+# this string will be returned in the callback. You can use your own user/customer id.
+docupass.set_custom_id("CUSTOMER1234")
+
+# Enable vault cloud storage to store signed document
+docupass.enable_vault(True)
+
+# Set a callback URL where signed document will be sent,
+# you can use docupass_callback.php under this folder as a template to receive the result
+docupass.set_callback_url("https://www.your-website.com/docupass_callback.php")
+
+# We want to redirect user back to your website when they are done with document signing,
+# there will be no fail URL unlike identity verification
+docupass.set_redirection_url("https://www.your-website.com/document_signed.html", "")
+
+""" More parameters
+docupass.set_reusable(True) # allow docupass URL/QR Code to be used by multiple users
+docupass.set_language("en") # override auto language detection
+docupass.set_qrcode_format("000000","FFFFFF",5,1) # generate a QR code using custom colors and size
+docupass.hide_branding_logo(True) # hide footer logo
+docupass.set_custom_html_url("https://www.yourwebsite.com/docupass_template.html") # use your own HTML/CSS for DocuPass page
+docupass.sms_contract_link("+1333444555")  # Send signing link to user's mobile phone
+"""
+
+#Assuming in your contract template you have a dynamic field %{email} and you want to fill it with user email
+prefill = {
+    "email": "user@example.com"
+}
+
+# Create a signature session for this user
+response = docupass.create_signature("Template ID", "PDF", prefill)
+
+print(response)
+
+print("Scan the QR Code below to sign document: ")
+print(response['qrcode'])
+print("Or open your mobile browser and navigate to: ")
+print(response['url'])
+```
+
+Once user has reviewed and signed the document, the signed document will be sent back to your server using callback under the `contract.document_url` field, the contract will also be saved to vault if you have enabled vault.
 
 ## Vault API
 

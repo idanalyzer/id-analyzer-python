@@ -32,6 +32,7 @@ try:
     coreapi.enable_aml_check(True)  # enable AML/PEP compliance check
     coreapi.set_aml_database("global_politicians,eu_meps,eu_cors")  # limit AML check to only PEPs
     coreapi.enable_aml_strict_match(True)  # make AML matching more strict to prevent false positives
+    coreapi.generate_contract("Template ID", "PDF", {"email":"user@example.com"}) # generate a PDF document autofilled with data from user ID
     """
 
     # perform scan
