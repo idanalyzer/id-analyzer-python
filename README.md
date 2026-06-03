@@ -1,4 +1,13 @@
 
+> # ⚠️ DEPRECATED — use the v2 SDK
+> This is the legacy **API v1** Python SDK (PyPI package `idanalyzer`). It targets the
+> older `api.idanalyzer.com` fleet and is no longer actively maintained.
+>
+> **New projects should use the API v2 SDK:**
+> [`idanalyzer2`](https://pypi.org/project/idanalyzer2/) ·
+> repo [idanalyzer/id-analyzer-v2-python](https://github.com/idanalyzer/id-analyzer-v2-python)
+> (`pip install idanalyzer2`).
+
 # ID Analyzer Python SDK
 This is a python SDK library for [ID Analyzer Identity Verification APIs](https://www.idanalyzer.com), though all the APIs can be called with without the SDK using simple HTTP requests as outlined in the [documentation](https://developer.idanalyzer.com), you can use this SDK to accelerate server-side development.
 
