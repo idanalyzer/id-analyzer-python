@@ -73,7 +73,6 @@ class CoreAPI:
             raise ValueError("Please provide an API key")
         if not region:
             raise ValueError("Please set an API region (US, EU)")
-        self.config = self.DEFAULT_CONFIG
         self.apikey = apikey
         self.throw_error = False
         if region.upper() == "EU":
@@ -82,6 +81,7 @@ class CoreAPI:
             self.apiendpoint = "https://api.idanalyzer.com/"
         else:
             self.apiendpoint = region
+        self.reset_config()
 
     def throw_api_exception(self, throw_exception = False):
         """
@@ -95,7 +95,7 @@ class CoreAPI:
         """
         Reset all API configurations except API key and region.
         """
-        self.config = self.DEFAULT_CONFIG
+        self.config = self.DEFAULT_CONFIG.copy()
 
     def set_accuracy(self, accuracy=2):
         """
