@@ -1,7 +1,7 @@
 
 > # ⚠️ DEPRECATED — use the v2 SDK
 > This is the legacy **API v1** Python SDK (PyPI package `idanalyzer`). It targets the
-> older `api.idanalyzer.com` fleet and is no longer actively maintained.
+> older `api.idanalyzer.com` endpoint and is no longer actively maintained.
 >
 > **New projects should use the API v2 SDK:**
 > [`idanalyzer2`](https://pypi.org/project/idanalyzer2/) ·
