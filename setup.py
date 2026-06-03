@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '1.2.2'
+VERSION = '1.2.3'
 DESCRIPTION = 'ID Analyzer API client library, scan and verify global passport, driver license and identification card.'
 
 
